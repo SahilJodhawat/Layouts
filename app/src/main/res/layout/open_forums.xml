@@ -1,0 +1,944 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/back_btn"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/back_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/ask_doubts_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="25dp"
+            android:fontFamily="@font/roboto_bold"
+            android:text="Ask Doubts"
+            android:textColor="#000000"
+            android:textSize="21dp"
+            app:layout_constraintStart_toEndOf="@id/back_btn"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/my_posts_img"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="105.19dp"
+            android:src="@drawable/my_posts"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_editor_absoluteX="47dp"
+            app:layout_editor_absoluteY="109.39dp"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/my_post_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/roboto_medium"
+            android:text="My posts"
+            android:textColor="#022C57"
+            android:textSize="14dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/my_posts_img" />
+
+        <ImageView
+            android:id="@+id/my_people"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="105dp"
+            android:src="@drawable/my_people"
+            app:layout_constraintStart_toEndOf="@+id/my_posts_img"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_editor_absoluteX="123dp"
+            app:layout_editor_absoluteY="92dp" />
+
+        <TextView
+            android:id="@+id/my_people_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="26dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/roboto_medium"
+            android:text="My Groups"
+            android:textColor="#022C57"
+            android:textSize="14dp"
+            app:layout_constraintStart_toEndOf="@id/my_post_txt"
+            app:layout_constraintTop_toBottomOf="@+id/my_people" />
+
+        <ImageView
+            android:id="@+id/open_forum_img"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="105dp"
+            android:src="@drawable/open_forum"
+            app:layout_constraintStart_toEndOf="@id/my_people"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_editor_absoluteX="219dp"
+            app:layout_editor_absoluteY="92dp" />
+
+        <TextView
+            android:id="@+id/open_forum_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="26dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/roboto_medium"
+            android:text="Open Forum"
+            android:textColor="#022C57"
+            android:textSize="14dp"
+            app:layout_constraintStart_toEndOf="@id/my_people_txt"
+            app:layout_constraintTop_toBottomOf="@id/open_forum_img" />
+
+        <ImageView
+            android:id="@+id/cht_img"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="105dp"
+            android:src="@drawable/chat"
+            app:layout_constraintStart_toEndOf="@id/open_forum_img"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_editor_absoluteX="313dp"
+            app:layout_editor_absoluteY="91dp" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="26dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/roboto_medium"
+            android:text="Chatrooms"
+            android:textColor="#022C57"
+            android:textSize="14dp"
+            app:layout_constraintStart_toEndOf="@id/open_forum_txt"
+            app:layout_constraintTop_toBottomOf="@id/cht_img" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:layout_marginTop="1dp"
+        android:background="#E1DFDF"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="175dp"
+        tools:layout_editor_absoluteX="0dp">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/post_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/post_constraint"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/circle_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="19dp"
+                    android:background="@drawable/circle"
+                    android:gravity="center"
+                    android:text="R"
+                    android:textColor="@color/white"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:fontFamily="@font/roboto_bold"
+                    android:text="Rajendra Dubey"
+                    android:textColor="#3C3C3C"
+                    android:textSize="16dp"
+                    app:layout_constraintStart_toEndOf="@id/circle_txt"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/timeline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="293dp"
+                    android:fontFamily="@font/roboto_light"
+                    android:text="5 hours ago"
+                    android:textColor="#B1B0AF"
+                    android:textSize="12dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:src="@drawable/ic_baseline_more_vert_24"
+                    app:layout_constraintStart_toEndOf="@id/timeline"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/subject_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="Mathematics"
+                    android:textColor="#0A9AF9"
+                    android:textSize="12dp"
+                    app:layout_constraintStart_toEndOf="@id/circle_txt"
+                    app:layout_constraintTop_toBottomOf="@id/name" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_light"
+                    android:text="-Video Classes"
+                    android:textColor="#707070"
+                    android:textSize="12dp"
+                    app:layout_constraintStart_toEndOf="@id/subject_txt"
+                    app:layout_constraintTop_toBottomOf="@id/name" />
+
+                <TextView
+                    android:id="@+id/post_txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="63dp"
+                    android:layout_marginStart="19dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/roboto"
+                    android:text="Mathematics includes the study of such topics as quantity,structure,space,and change.
+ It has no generally accepted...…."
+                    android:textColor="#3C3C3C"
+                    android:textSize="15dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/subject_txt" />
+
+                <ImageView
+                    android:id="@+id/mathematics_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="213dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/mathematics"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/post_txt" />
+
+
+                <View
+                    android:id="@+id/view2"
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="2dp"
+                    android:background="#E1DFDF"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/mathematics_img" />
+
+                <LinearLayout
+                    android:id="@+id/linear_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/view2">
+
+                    <ImageView
+                        android:id="@+id/like_img"
+                        android:layout_width="11.12dp"
+                        android:layout_height="11.14dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="15dp"
+                        android:src="@drawable/like" />
+
+                    <TextView
+                        android:id="@+id/like_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="16dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="1dp"
+                        android:fontFamily="@font/roboto"
+                        android:text="0 like"
+                        android:textColor="#707070"
+                        android:textSize="12dp" />
+
+
+                    <ImageView
+                        android:id="@+id/reply_img"
+                        android:layout_width="14.54dp"
+                        android:layout_height="8.73dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="108dp"
+                        android:src="@drawable/reply" />
+
+                    <TextView
+                        android:id="@+id/reply_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="16dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="3dp"
+                        android:fontFamily="@font/roboto"
+                        android:text="2 Discussions"
+                        android:textColor="#707070"
+                        android:textSize="12dp" />
+
+                    <ImageView
+                        android:id="@+id/share_img"
+                        android:layout_width="12.51dp"
+                        android:layout_height="12.51dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="70dp"
+                        android:src="@drawable/tag" />
+
+                    <TextView
+                        android:layout_width="58dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="3dp"
+                        android:fontFamily="@font/roboto"
+                        android:text="No tagged"
+                        android:textColor="#707070"
+                        android:textSize="12dp" />
+
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/view3"
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="1dp"
+                    android:background="#E1DFDF"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linear_layout" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/view3">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/circle_txt1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="19dp"
+                            android:layout_marginTop="4dp"
+                            android:background="@drawable/circle"
+                            android:gravity="center"
+                            android:text="B"
+                            android:textColor="@color/white"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/name1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="4dp"
+                            android:fontFamily="@font/roboto_bold"
+                            android:text="Bijendra Singh"
+                            android:textColor="#3C3C3C"
+                            android:textSize="16dp"
+                            app:layout_constraintStart_toEndOf="@id/circle_txt1"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                        <TextView
+                            android:id="@+id/timeline1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="130dp"
+                            android:layout_marginTop="4dp"
+                            android:fontFamily="@font/roboto_light"
+                            android:text="Web at 5:30"
+                            android:textColor="#B1B0AF"
+                            android:textSize="12dp"
+                            app:layout_constraintStart_toEndOf="@id/name1"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/dots"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:src="@drawable/ic_baseline_more_vert_24"
+                            app:layout_constraintStart_toEndOf="@id/timeline1"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/subject_txt1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:text="Mathematics"
+                            android:textColor="#0A9AF9"
+                            android:textSize="12dp"
+                            app:layout_constraintStart_toEndOf="@id/circle_txt1"
+                            app:layout_constraintTop_toBottomOf="@id/name1" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto_light"
+                            android:text="-Video Classes"
+                            android:textColor="#707070"
+                            android:textSize="12dp"
+                            app:layout_constraintStart_toEndOf="@id/subject_txt1"
+                            app:layout_constraintTop_toBottomOf="@id/name1" />
+
+                        <TextView
+                            android:id="@+id/post_txt1"
+                            android:layout_width="match_parent"
+                            android:layout_height="63dp"
+                            android:layout_marginStart="19dp"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="@font/roboto"
+                            android:text="Mathematics includes the study of such topics as quantity,structure,space,and change.
+ It has no generally accepted...…."
+                            android:textColor="#3C3C3C"
+                            android:textSize="15dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/subject_txt1" />
+
+                        <View
+                            android:id="@+id/view4"
+                            android:layout_width="0dp"
+                            android:layout_height="2dp"
+                            android:layout_marginTop="2dp"
+                            android:background="#E1DFDF"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/post_txt1" />
+
+
+                        <LinearLayout
+                            android:id="@+id/linear_layout1"
+                            android:layout_width="match_parent"
+                            android:layout_height="32dp"
+                            android:orientation="horizontal"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/view4">
+
+                            <ImageView
+                                android:id="@+id/like_img1"
+                                android:layout_width="11.12dp"
+                                android:layout_height="11.14dp"
+                                android:layout_gravity="center"
+                                android:layout_marginStart="15dp"
+                                android:src="@drawable/like" />
+
+                            <TextView
+                                android:id="@+id/like_count1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="16dp"
+                                android:layout_gravity="center"
+                                android:layout_marginStart="1dp"
+                                android:fontFamily="@font/roboto"
+                                android:text="0 like"
+                                android:textColor="#707070"
+                                android:textSize="12dp" />
+
+                            <ImageView
+                                android:id="@+id/reply_img1"
+                                android:layout_width="14.54dp"
+                                android:layout_height="8.73dp"
+                                android:layout_gravity="center"
+                                android:layout_marginStart="108dp"
+                                android:src="@drawable/reply" />
+
+                            <TextView
+                                android:id="@+id/reply_count1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="16dp"
+                                android:layout_gravity="center"
+                                android:layout_marginStart="3dp"
+                                android:fontFamily="@font/roboto"
+                                android:text="2 Discussions"
+                                android:textColor="#707070"
+                                android:textSize="12dp" />
+
+
+                            <ImageView
+                                android:id="@+id/share_img1"
+                                android:layout_width="12.51dp"
+                                android:layout_height="12.51dp"
+                                android:layout_gravity="center"
+                                android:layout_marginStart="70dp"
+                                android:src="@drawable/tag" />
+
+                            <TextView
+                                android:layout_width="58dp"
+                                android:layout_height="16dp"
+                                android:layout_gravity="center"
+                                android:layout_marginStart="3dp"
+                                android:fontFamily="@font/roboto"
+                                android:text="No tagged"
+                                android:textColor="#707070"
+                                android:textSize="12dp" />
+
+
+                        </LinearLayout>
+
+                        <View
+                            android:id="@+id/view5"
+                            android:layout_width="0dp"
+                            android:layout_height="2dp"
+                            android:layout_marginTop="1dp"
+                            android:background="#E1DFDF"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/linear_layout1" />
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/view5">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/circle_txt2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="19dp"
+                                    android:layout_marginTop="4dp"
+                                    android:background="@drawable/circle"
+                                    android:gravity="center"
+                                    android:text="D"
+                                    android:textColor="@color/white"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/name2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginTop="4dp"
+                                    android:fontFamily="@font/roboto_bold"
+                                    android:text="Deepanshu"
+                                    android:textColor="#3C3C3C"
+                                    android:textSize="16dp"
+                                    app:layout_constraintStart_toEndOf="@id/circle_txt2"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/timeline2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="130dp"
+                                    android:layout_marginTop="4dp"
+                                    android:fontFamily="@font/roboto_light"
+                                    android:text="53 days ago"
+                                    android:textColor="#B1B0AF"
+                                    android:textSize="12dp"
+                                    app:layout_constraintStart_toEndOf="@id/name2"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <ImageView
+                                    android:id="@+id/dots1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="5dp"
+                                    android:layout_marginTop="4dp"
+                                    android:src="@drawable/ic_baseline_more_vert_24"
+                                    app:layout_constraintStart_toEndOf="@id/timeline2"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/subject_txt2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp"
+                                    android:text="Mathematics"
+                                    android:textColor="#0A9AF9"
+                                    android:textSize="12dp"
+                                    app:layout_constraintStart_toEndOf="@id/circle_txt2"
+                                    app:layout_constraintTop_toBottomOf="@id/name2" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/roboto_light"
+                                    android:text="-Video Classes"
+                                    android:textColor="#707070"
+                                    android:textSize="12dp"
+                                    app:layout_constraintStart_toEndOf="@id/subject_txt2"
+                                    app:layout_constraintTop_toBottomOf="@id/name2" />
+
+                                <TextView
+                                    android:id="@+id/post_txt2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="63dp"
+                                    android:layout_marginStart="19dp"
+                                    android:layout_marginTop="5dp"
+                                    android:fontFamily="@font/roboto"
+                                    android:text="Mathematics includes the study of such topics as quantity,structure,space,and change.
+ It has no generally accepted...…."
+                                    android:textColor="#3C3C3C"
+                                    android:textSize="15dp"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@id/subject_txt2" />
+
+                                <ImageView
+                                    android:id="@+id/mathematics_img2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="213dp"
+                                    android:layout_marginTop="10dp"
+                                    android:src="@drawable/mathematics2"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@id/post_txt2" />
+
+                                <View
+                                    android:id="@+id/view6"
+                                    android:layout_width="0dp"
+                                    android:layout_height="2dp"
+                                    android:layout_marginTop="2dp"
+                                    android:background="#E1DFDF"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintRight_toRightOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/mathematics_img2" />
+
+
+                                <LinearLayout
+                                    android:id="@+id/linear_layout2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="32dp"
+                                    android:layout_marginBottom="5dp"
+                                    android:orientation="horizontal"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@id/view6">
+
+                                    <ImageView
+                                        android:id="@+id/like_img2"
+                                        android:layout_width="11.12dp"
+                                        android:layout_height="11.14dp"
+                                        android:layout_gravity="center"
+                                        android:layout_marginStart="15dp"
+                                        android:src="@drawable/like" />
+
+                                    <TextView
+                                        android:id="@+id/like_count2"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="16dp"
+                                        android:layout_gravity="center"
+                                        android:layout_marginStart="1dp"
+                                        android:fontFamily="@font/roboto"
+                                        android:text="0 like"
+                                        android:textColor="#707070"
+                                        android:textSize="12dp" />
+
+                                    <ImageView
+                                        android:id="@+id/reply_img2"
+                                        android:layout_width="14.54dp"
+                                        android:layout_height="8.73dp"
+                                        android:layout_gravity="center"
+                                        android:layout_marginStart="108dp"
+                                        android:src="@drawable/reply" />
+
+                                    <TextView
+                                        android:id="@+id/reply_count2"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="16dp"
+                                        android:layout_gravity="center"
+                                        android:layout_marginStart="3dp"
+                                        android:fontFamily="@font/roboto"
+                                        android:text="2 Discussions"
+                                        android:textColor="#707070"
+                                        android:textSize="12dp" />
+
+                                    <ImageView
+                                        android:id="@+id/share_img2"
+                                        android:layout_width="12.51dp"
+                                        android:layout_height="12.51dp"
+                                        android:layout_gravity="center"
+                                        android:layout_marginStart="70dp"
+                                        android:src="@drawable/tag" />
+
+                                    <TextView
+                                        android:layout_width="58dp"
+                                        android:layout_height="16dp"
+                                        android:layout_gravity="center"
+                                        android:layout_marginStart="3dp"
+                                        android:fontFamily="@font/roboto"
+                                        android:text="No tagged"
+                                        android:textColor="#707070"
+                                        android:textSize="12dp" />
+
+
+                                </LinearLayout>
+
+                                <View
+                                    android:id="@+id/view7"
+                                    android:layout_width="0dp"
+                                    android:layout_height="2dp"
+                                    android:layout_marginTop="2dp"
+                                    android:background="#E1DFDF"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintRight_toRightOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/linear_layout2" />
+
+                                <androidx.cardview.widget.CardView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@id/view7">
+
+                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
+
+                                        <TextView
+                                            android:id="@+id/circle_txt3"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="19dp"
+                                            android:layout_marginTop="4dp"
+                                            android:background="@drawable/circle"
+                                            android:gravity="center"
+                                            android:text="B"
+                                            android:textColor="@color/white"
+                                            app:layout_constraintStart_toStartOf="parent"
+                                            app:layout_constraintTop_toTopOf="parent" />
+
+                                        <TextView
+                                            android:id="@+id/name3"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="5dp"
+                                            android:layout_marginTop="4dp"
+                                            android:fontFamily="@font/roboto_bold"
+                                            android:text="Bijendra Singh"
+                                            android:textColor="#3C3C3C"
+                                            android:textSize="16dp"
+                                            app:layout_constraintStart_toEndOf="@id/circle_txt3"
+                                            app:layout_constraintTop_toTopOf="parent" />
+
+                                        <TextView
+                                            android:id="@+id/timeline3"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="130dp"
+                                            android:layout_marginTop="4dp"
+                                            android:fontFamily="@font/roboto_light"
+                                            android:text="53 days ago"
+                                            android:textColor="#B1B0AF"
+                                            android:textSize="12dp"
+                                            app:layout_constraintStart_toEndOf="@id/name3"
+                                            app:layout_constraintTop_toTopOf="parent" />
+
+                                        <ImageView
+                                            android:id="@+id/dots2"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="5dp"
+                                            android:layout_marginTop="4dp"
+                                            android:src="@drawable/ic_baseline_more_vert_24"
+                                            app:layout_constraintStart_toEndOf="@id/timeline3"
+                                            app:layout_constraintTop_toTopOf="parent" />
+
+                                        <TextView
+                                            android:id="@+id/subject_txt3"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="10dp"
+                                            android:text="Mathematics"
+                                            android:textColor="#0A9AF9"
+                                            android:textSize="12dp"
+                                            app:layout_constraintStart_toEndOf="@id/circle_txt3"
+                                            app:layout_constraintTop_toBottomOf="@id/name3" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:fontFamily="@font/roboto_light"
+                                            android:text="-Video Classes"
+                                            android:textColor="#707070"
+                                            android:textSize="12dp"
+                                            app:layout_constraintStart_toEndOf="@id/subject_txt3"
+                                            app:layout_constraintTop_toBottomOf="@id/name3" />
+
+                                        <TextView
+                                            android:id="@+id/post_txt3"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="63dp"
+                                            android:layout_marginStart="19dp"
+                                            android:layout_marginTop="5dp"
+                                            android:fontFamily="@font/roboto"
+                                            android:text="Mathematics includes the study of such topics as quantity,structure,space,and change.
+ It has no generally accepted...….View More"
+                                            android:textColor="#3C3C3C"
+                                            android:textSize="15dp"
+                                            app:layout_constraintStart_toStartOf="parent"
+                                            app:layout_constraintTop_toBottomOf="@id/subject_txt3" />
+
+
+                                        <View
+                                            android:id="@+id/view8"
+                                            android:layout_width="0dp"
+                                            android:layout_height="2dp"
+                                            android:layout_marginTop="1dp"
+                                            android:background="#E1DFDF"
+                                            app:layout_constraintLeft_toLeftOf="parent"
+                                            app:layout_constraintRight_toRightOf="parent"
+                                            app:layout_constraintTop_toBottomOf="@+id/post_txt3" />
+
+                                        <LinearLayout
+                                            android:id="@+id/linear_layout3"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="32dp"
+                                            android:layout_marginBottom="5dp"
+                                            android:orientation="horizontal"
+                                            app:layout_constraintEnd_toEndOf="parent"
+                                            app:layout_constraintStart_toStartOf="parent"
+                                            app:layout_constraintTop_toBottomOf="@id/view8">
+
+                                            <ImageView
+                                                android:id="@+id/like_img3"
+                                                android:layout_width="11.12dp"
+                                                android:layout_height="11.14dp"
+                                                android:layout_gravity="center"
+                                                android:layout_marginStart="15dp"
+                                                android:src="@drawable/like" />
+
+                                            <TextView
+                                                android:id="@+id/like_count3"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="16dp"
+                                                android:layout_gravity="center"
+                                                android:layout_marginStart="3dp"
+                                                android:fontFamily="@font/roboto"
+                                                android:text="0 like"
+                                                android:textColor="#707070"
+                                                android:textSize="12dp" />
+
+                                            <ImageView
+                                                android:id="@+id/reply_img3"
+                                                android:layout_width="14.54dp"
+                                                android:layout_height="8.73dp"
+                                                android:layout_gravity="center"
+                                                android:layout_marginStart="108dp"
+                                                android:src="@drawable/reply" />
+
+                                            <TextView
+                                                android:id="@+id/reply_count3"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="16dp"
+                                                android:layout_gravity="center"
+                                                android:layout_marginStart="3dp"
+                                                android:fontFamily="@font/roboto"
+                                                android:text="2 Discussions"
+                                                android:textColor="#707070"
+                                                android:textSize="12dp" />
+
+                                            <ImageView
+                                                android:id="@+id/share_img3"
+                                                android:layout_width="12.51dp"
+                                                android:layout_height="12.51dp"
+                                                android:layout_gravity="center"
+                                                android:layout_marginStart="70dp"
+                                                android:src="@drawable/tag" />
+
+                                            <TextView
+                                                android:layout_width="58dp"
+                                                android:layout_height="16dp"
+                                                android:layout_gravity="center"
+                                                android:layout_marginStart="3dp"
+                                                android:fontFamily="@font/roboto"
+                                                android:text="No tagged"
+                                                android:textColor="#707070"
+                                                android:textSize="12dp" />
+
+
+                                        </LinearLayout>
+
+
+                                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                                </androidx.cardview.widget.CardView>
+
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                        </androidx.cardview.widget.CardView>
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                </androidx.cardview.widget.CardView>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+
+    </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/create_thread_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#52CE90"
+        android:src="@drawable/ic_baseline_add_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="500dp"
+        android:layout_marginRight="14dp"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

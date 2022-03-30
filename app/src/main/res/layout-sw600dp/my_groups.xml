@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/back_btn"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/back_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/ask_doubts_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="25dp"
+            android:fontFamily="@font/roboto_bold"
+            android:text="Ask Doubts"
+            android:textColor="#000000"
+            android:textSize="21dp"
+            app:layout_constraintStart_toEndOf="@id/back_btn"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/my_posts_img"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="105.19dp"
+            android:src="@drawable/my_posts"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_editor_absoluteX="47dp"
+            app:layout_editor_absoluteY="109.39dp"
+            tools:ignore="ContentDescription"/>
+
+        <TextView
+            android:id="@+id/my_post_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/roboto_medium"
+            android:text="My posts"
+            android:textColor="#022C57"
+            android:textSize="14dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/my_posts_img" />
+
+        <ImageView
+            android:id="@+id/my_people"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="120dp"
+            android:layout_marginTop="105dp"
+            android:src="@drawable/my_people"
+            app:layout_constraintStart_toEndOf="@+id/my_posts_img"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_editor_absoluteX="123dp"
+            app:layout_editor_absoluteY="92dp" />
+
+        <TextView
+            android:id="@+id/my_people_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="86dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/roboto_medium"
+            android:text="My Groups"
+            android:textColor="#022C57"
+            android:textSize="14dp"
+            app:layout_constraintStart_toEndOf="@id/my_post_txt"
+            app:layout_constraintTop_toBottomOf="@+id/my_people" />
+
+        <ImageView
+            android:id="@+id/open_forum_img"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="120dp"
+            android:layout_marginTop="105dp"
+            android:src="@drawable/open_forum"
+            app:layout_constraintStart_toEndOf="@id/my_people"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_editor_absoluteX="219dp"
+            app:layout_editor_absoluteY="92dp" />
+
+        <TextView
+            android:id="@+id/open_forum_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="86dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/roboto_medium"
+            android:text="Open Forum"
+            android:textColor="#022C57"
+            android:textSize="14dp"
+            app:layout_constraintStart_toEndOf="@id/my_people_txt"
+            app:layout_constraintTop_toBottomOf="@id/open_forum_img" />
+
+        <ImageView
+            android:id="@+id/cht_img"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="120dp"
+            android:layout_marginTop="105dp"
+            android:src="@drawable/chat"
+            app:layout_constraintStart_toEndOf="@id/open_forum_img"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_editor_absoluteX="313dp"
+            app:layout_editor_absoluteY="91dp" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="86dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/roboto_medium"
+            android:text="Chatrooms"
+            android:textColor="#022C57"
+            android:textSize="14dp"
+            app:layout_constraintStart_toEndOf="@id/open_forum_txt"
+            app:layout_constraintTop_toBottomOf="@id/cht_img" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="0dp"
+        android:layout_height="5dp"
+        android:layout_marginTop="1dp"
+        android:background="#E1DFDF"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="175dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/academy_img"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:src="@drawable/academy"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp"/>
+
+            <TextView
+                android:id="@+id/txt1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_bold"
+                android:textSize="16dp"
+                app:layout_constraintStart_toEndOf="@+id/academy_img"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textColor="#3C3C3C"
+                android:text="Forum Discussion"/>
+
+            <TextView
+                android:id="@+id/txt2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto"
+                android:textSize="16dp"
+                app:layout_constraintStart_toEndOf="@id/academy_img"
+                app:layout_constraintTop_toBottomOf="@id/txt1"
+                android:textColor="#636363"
+                android:text="News &amp; Event"/>
+
+            <View
+                android:id="@+id/view1"
+                android:layout_width="0dp"
+                android:layout_height="5dp"
+                android:layout_marginTop="18dp"
+                android:background="#E1DFDF"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt2" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view1">
+
+                <ImageView
+                    android:id="@+id/academy_img1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp"
+                    android:src="@drawable/academy"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="5dp"/>
+
+                <TextView
+                    android:id="@+id/txt3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_bold"
+                    android:textSize="16dp"
+                    app:layout_constraintStart_toEndOf="@+id/academy_img1"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:textColor="#3C3C3C"
+                    android:text="DIPS Academy"/>
+
+                <TextView
+                    android:id="@+id/txt4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto"
+                    android:textSize="16dp"
+                    app:layout_constraintStart_toEndOf="@id/academy_img1"
+                    app:layout_constraintTop_toBottomOf="@id/txt3"
+                    android:textColor="#636363"
+                    android:text="Institute"/>
+
+                <View
+                    android:id="@+id/view2"
+                    android:layout_width="0dp"
+                    android:layout_height="5dp"
+                    android:layout_marginTop="18dp"
+                    android:background="#E1DFDF"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txt4" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/view2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+                    <ImageView
+                        android:id="@+id/academy_img2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="44dp"
+                        android:src="@drawable/academy"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"/>
+
+                    <TextView
+                        android:id="@+id/txt5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_bold"
+                        android:textSize="16dp"
+                        app:layout_constraintStart_toEndOf="@+id/academy_img2"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:textColor="#3C3C3C"
+                        android:text="DIPS Academy"/>
+
+                    <TextView
+                        android:id="@+id/txt6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto"
+                        android:textSize="16dp"
+                        app:layout_constraintStart_toEndOf="@id/academy_img2"
+                        app:layout_constraintTop_toBottomOf="@id/txt5"
+                        android:textColor="#636363"
+                        android:text="Institute"/>
+
+                    <View
+                        android:id="@+id/view3"
+                        android:layout_width="0dp"
+                        android:layout_height="5dp"
+                        android:layout_marginTop="18dp"
+                        android:background="#E1DFDF"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txt6" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/view3"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent">
+
+                        <ImageView
+                            android:id="@+id/academy_img3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="44dp"
+                            android:src="@drawable/academy"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginTop="5dp"/>
+
+                        <TextView
+                            android:id="@+id/txt7"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto_bold"
+                            android:textSize="16dp"
+                            app:layout_constraintStart_toEndOf="@+id/academy_img3"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:textColor="#3C3C3C"
+                            android:text="DIPS Academy"/>
+
+                        <TextView
+                            android:id="@+id/txt8"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto"
+                            android:textSize="16dp"
+                            app:layout_constraintStart_toEndOf="@id/academy_img3"
+                            app:layout_constraintTop_toBottomOf="@id/txt7"
+                            android:textColor="#636363"
+                            android:text="Institute"/>
+
+                        <View
+                            android:id="@+id/view4"
+                            android:layout_width="0dp"
+                            android:layout_height="5dp"
+                            android:layout_marginTop="18dp"
+                            android:background="#E1DFDF"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/txt8" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toBottomOf="@id/view4"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent">
+
+                            <ImageView
+                                android:id="@+id/academy_img4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="44dp"
+                                android:src="@drawable/academy"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                android:layout_marginLeft="15dp"
+                                android:layout_marginTop="5dp"/>
+
+                            <TextView
+                                android:id="@+id/txt9"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/roboto_bold"
+                                android:textSize="16dp"
+                                app:layout_constraintStart_toEndOf="@+id/academy_img4"
+                                app:layout_constraintTop_toTopOf="parent"
+                                android:textColor="#3C3C3C"
+                                android:text="DIPS Academy"/>
+
+                            <TextView
+                                android:id="@+id/txt10"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/roboto"
+                                android:textSize="16dp"
+                                app:layout_constraintStart_toEndOf="@id/academy_img4"
+                                app:layout_constraintTop_toBottomOf="@id/txt9"
+                                android:textColor="#636363"
+                                android:text="Institute"/>
+
+                            <View
+                                android:id="@+id/view5"
+                                android:layout_width="0dp"
+                                android:layout_height="5dp"
+                                android:layout_marginTop="18dp"
+                                android:background="#E1DFDF"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/txt10" />
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:layout_constraintTop_toBottomOf="@id/view5"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent">
+                                <ImageView
+                                    android:id="@+id/academy_img5"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="44dp"
+                                    android:src="@drawable/academy"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    android:layout_marginLeft="15dp"
+                                    android:layout_marginTop="5dp"/>
+
+                                <TextView
+                                    android:id="@+id/txt11"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/roboto_bold"
+                                    android:textSize="16dp"
+                                    app:layout_constraintStart_toEndOf="@+id/academy_img5"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    android:textColor="#3C3C3C"
+                                    android:text="DIPS Academy"/>
+
+                                <TextView
+                                    android:id="@+id/txt12"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/roboto"
+                                    android:textSize="16dp"
+                                    app:layout_constraintStart_toEndOf="@id/academy_img5"
+                                    app:layout_constraintTop_toBottomOf="@id/txt11"
+                                    android:textColor="#636363"
+                                    android:text="Institute"/>
+
+                                <View
+                                    android:id="@+id/view6"
+                                    android:layout_width="0dp"
+                                    android:layout_height="5dp"
+                                    android:layout_marginTop="18dp"
+                                    android:background="#E1DFDF"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintRight_toRightOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/txt12" />
+
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    app:layout_constraintTop_toBottomOf="@id/view6"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent">
+
+                                    <ImageView
+                                        android:id="@+id/academy_img6"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="44dp"
+                                        android:src="@drawable/academy"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent"
+                                        android:layout_marginLeft="15dp"
+                                        android:layout_marginTop="5dp"
+                                        tools:ignore="TooDeepLayout" />
+
+                                    <TextView
+                                        android:id="@+id/txt13"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/roboto_bold"
+                                        android:textSize="16dp"
+                                        app:layout_constraintStart_toEndOf="@+id/academy_img6"
+                                        app:layout_constraintTop_toTopOf="parent"
+                                        android:textColor="#3C3C3C"
+                                        android:text="DIPS Academy"/>
+
+                                    <TextView
+                                        android:id="@+id/txt14"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/roboto"
+                                        android:textSize="16dp"
+                                        app:layout_constraintStart_toEndOf="@id/academy_img6"
+                                        app:layout_constraintTop_toBottomOf="@id/txt13"
+                                        android:textColor="#636363"
+                                        android:text="Institute"/>
+
+                                    <View
+                                        android:id="@+id/view7"
+                                        android:layout_width="0dp"
+                                        android:layout_height="5dp"
+                                        android:layout_marginTop="18dp"
+                                        android:background="#E1DFDF"
+                                        app:layout_constraintLeft_toLeftOf="parent"
+                                        app:layout_constraintRight_toRightOf="parent"
+                                        app:layout_constraintTop_toBottomOf="@+id/txt14" />
+
+                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        app:layout_constraintTop_toBottomOf="@id/view7"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintEnd_toEndOf="parent">
+
+                                        <ImageView
+                                            android:id="@+id/academy_img7"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="44dp"
+                                            android:src="@drawable/academy"
+                                            app:layout_constraintStart_toStartOf="parent"
+                                            app:layout_constraintTop_toTopOf="parent"
+                                            android:layout_marginLeft="15dp"
+                                            android:layout_marginTop="5dp"/>
+
+                                        <TextView
+                                            android:id="@+id/txt15"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:fontFamily="@font/roboto_bold"
+                                            android:textSize="16dp"
+                                            app:layout_constraintStart_toEndOf="@+id/academy_img7"
+                                            app:layout_constraintTop_toTopOf="parent"
+                                            android:textColor="#3C3C3C"
+                                            android:text="DIPS Academy"/>
+
+                                        <TextView
+                                            android:id="@+id/txt16"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:fontFamily="@font/roboto"
+                                            android:textSize="16dp"
+                                            app:layout_constraintStart_toEndOf="@id/academy_img7"
+                                            app:layout_constraintTop_toBottomOf="@id/txt15"
+                                            android:textColor="#636363"
+                                            android:text="Institute"/>
+
+                                        <View
+                                            android:id="@+id/view8"
+                                            android:layout_width="0dp"
+                                            android:layout_height="5dp"
+                                            android:layout_marginTop="18dp"
+                                            android:background="#E1DFDF"
+                                            app:layout_constraintLeft_toLeftOf="parent"
+                                            app:layout_constraintRight_toRightOf="parent"
+                                            app:layout_constraintTop_toBottomOf="@+id/txt16" />
+
+                                        <androidx.constraintlayout.widget.ConstraintLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            app:layout_constraintTop_toBottomOf="@id/view8"
+                                            app:layout_constraintStart_toStartOf="parent"
+                                            app:layout_constraintEnd_toEndOf="parent">
+
+                                            <ImageView
+                                                android:id="@+id/academy_img8"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="44dp"
+                                                android:src="@drawable/academy"
+                                                app:layout_constraintStart_toStartOf="parent"
+                                                app:layout_constraintTop_toTopOf="parent"
+                                                android:layout_marginLeft="15dp"
+                                                android:layout_marginTop="5dp"/>
+
+                                            <TextView
+                                                android:id="@+id/txt17"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:fontFamily="@font/roboto_bold"
+                                                android:textSize="16dp"
+                                                app:layout_constraintStart_toEndOf="@+id/academy_img8"
+                                                app:layout_constraintTop_toTopOf="parent"
+                                                android:textColor="#3C3C3C"
+                                                android:text="DIPS Academy"/>
+
+                                            <TextView
+                                                android:id="@+id/txt18"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:fontFamily="@font/roboto"
+                                                android:textSize="16dp"
+                                                app:layout_constraintStart_toEndOf="@id/academy_img8"
+                                                app:layout_constraintTop_toBottomOf="@id/txt17"
+                                                android:textColor="#636363"
+                                                android:text="Institute"/>
+
+                                            <View
+                                                android:id="@+id/view9"
+                                                android:layout_width="0dp"
+                                                android:layout_height="5dp"
+                                                android:layout_marginTop="18dp"
+                                                android:background="#E1DFDF"
+                                                app:layout_constraintLeft_toLeftOf="parent"
+                                                app:layout_constraintRight_toRightOf="parent"
+                                                app:layout_constraintTop_toBottomOf="@+id/txt18" />
+
+                                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </ScrollView>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
