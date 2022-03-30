@@ -75,4 +75,5 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
         shimmerFrameLayout.stopShimmer()
     }
+    gdgus
 }
