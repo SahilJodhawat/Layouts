@@ -2,6 +2,7 @@ package com.example.layouts.viewmodel
 
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.layouts.NewsRepository
@@ -31,6 +32,7 @@ class MainViewModel(private val newsRepository: NewsRepository):ViewModel() {
                         Log.d("Error", t.message!!)
                      }
               })
+
        }
 
 
