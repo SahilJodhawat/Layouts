@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.layouts.R
 import com.example.layouts.data.NewsData
+import com.example.layouts.databinding.NewsBinding
 import com.squareup.picasso.Picasso
 
 
@@ -27,24 +28,22 @@ private var newsData = ArrayList<NewsData>()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): viewholder {
-        val view:View=LayoutInflater.from(parent.context).inflate(R.layout.news,parent,false)
-        return viewholder(view)
+        val newsbinding = NewsBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        return viewholder(newsbinding)
     }
 
     override fun onBindViewHolder(holder: viewholder, position: Int) {
-     holder.newstitle.text= newsData[holder.adapterPosition].title
-        Picasso.get().load(newsData[holder.adapterPosition].imageUrl).resize(240,
-        240).into(holder.newsImage)
-        holder.newsauthor.text="Author: ${newsData[holder.adapterPosition].author}"
+ holder.newsbinding.newsTitle.text = newsData.get(holder.adapterPosition).title
+        holder.newsbinding.newsAuthor.text= newsData.get(holder.adapterPosition).author
+        Picasso.get().load(newsData.get(holder.adapterPosition).imageUrl).resize(240,
+        240).into(holder.newsbinding.newsImage)
     }
 
     override fun getItemCount(): Int {
       return newsData.size
     }
-    class viewholder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val newstitle: TextView = itemView.findViewById(R.id.news_title)
-        val newsauthor: TextView = itemView.findViewById(R.id.news_author)
-        val newsImage: ImageView = itemView.findViewById(R.id.news_image)
+    class viewholder(val newsbinding: NewsBinding) : RecyclerView.ViewHolder(newsbinding.root) {
+
 
     }
 }

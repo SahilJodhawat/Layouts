@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.layouts.adater.NewsAdapter
 import com.example.layouts.api.NewsAPI
+import com.example.layouts.databinding.RecyclerViewBinding
 import com.example.layouts.viewmodel.MainViewModel
 import com.example.layouts.viewmodel.MainViewModelFactory
 import com.facebook.shimmer.ShimmerFrameLayout
@@ -18,28 +19,27 @@ import com.facebook.shimmer.ShimmerFrameLayout
 class MainActivity : AppCompatActivity() {
     private lateinit var mainViewModel: MainViewModel
     private lateinit var recyclerView: RecyclerView
+    lateinit var recyclerview1 : RecyclerViewBinding
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.recycler_view)
-        recyclerView = findViewById(R.id.recycler_view1)
-        shimmerFrameLayout = findViewById(R.id.shimmer_layout)
+        recyclerview1 = RecyclerViewBinding.inflate(layoutInflater)
+        setContentView(recyclerview1.root)
         val newsApi = NewsAPI.getInstance()
         val repository = NewsRepository(newsApi)
         mainViewModel = ViewModelProvider(this, MainViewModelFactory(repository))[MainViewModel::class.java]
-
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.addItemDecoration(DividerItemDecoration(this,DividerItemDecoration.VERTICAL))
+         recyclerview1.recyclerView1.layoutManager= LinearLayoutManager(this)
+        recyclerview1.recyclerView1.addItemDecoration(DividerItemDecoration(this,DividerItemDecoration.VERTICAL))
         val adapter = NewsAdapter()
-        recyclerView.adapter = adapter
+        recyclerview1.recyclerView1.adapter = adapter
         mainViewModel.newsdata.observe(this, {
             val value: String = mainViewModel.newsdata.toString()
             if (value.isEmpty()) {
-                shimmerFrameLayout.visibility = VISIBLE
-                recyclerView.visibility = View.GONE
+                recyclerview1.shimmerLayout.visibility = VISIBLE
+                recyclerview1.recyclerView1.visibility = View.GONE
             } else {
-                shimmerFrameLayout.visibility = View.GONE
-                recyclerView.visibility = VISIBLE
+                recyclerview1.shimmerLayout.visibility = View.GONE
+                recyclerview1.recyclerView1.visibility = VISIBLE
                 adapter.setData(it)
             }
 
@@ -68,11 +68,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        shimmerFrameLayout.startShimmer()
+        recyclerview1.shimmerLayout.startShimmer()
     }
 
     override fun onPause() {
         super.onPause()
-        shimmerFrameLayout.stopShimmer()
+        recyclerview1.shimmerLayout.stopShimmer()
     }
+
 }
