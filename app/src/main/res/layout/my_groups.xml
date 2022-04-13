@@ -117,7 +117,7 @@
             android:id="@+id/cht_img"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_marginStart="60dp"
+            android:layout_marginStart="68dp"
             android:layout_marginTop="105dp"
             android:src="@drawable/chat"
             app:layout_constraintStart_toEndOf="@id/open_forum_img"

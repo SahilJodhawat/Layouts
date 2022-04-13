@@ -1,5 +1,9 @@
 package com.example.layouts.adater
 
+import android.content.Intent
+import android.content.Intent.*
+import android.net.ConnectivityManager
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,30 +24,32 @@ import com.squareup.picasso.Picasso
 class NewsAdapter :
     RecyclerView.Adapter<NewsAdapter.viewholder>() {
 
-private var newsData = ArrayList<NewsData>()
+    private var newsData = ArrayList<NewsData>()
 
-    fun setData(newsdata : ArrayList<NewsData>){
-        this.newsData= newsdata
+    fun setData(newsdata: ArrayList<NewsData>) {
+        this.newsData = newsdata
         notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): viewholder {
-        val newsbinding = NewsBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val newsbinding = NewsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return viewholder(newsbinding)
     }
 
     override fun onBindViewHolder(holder: viewholder, position: Int) {
- holder.newsbinding.newsTitle.text = newsData.get(holder.adapterPosition).title
-        holder.newsbinding.newsAuthor.text= newsData.get(holder.adapterPosition).author
-        Picasso.get().load(newsData.get(holder.adapterPosition).imageUrl).resize(240,
-        240).into(holder.newsbinding.newsImage)
+        holder.newsbinding.newsTitle.text = newsData.get(holder.adapterPosition).title
+        holder.newsbinding.newsAuthor.text = newsData.get(holder.adapterPosition).author
+        Picasso.get().load(newsData.get(holder.adapterPosition).imageUrl).resize(
+            240,
+            240
+        ).into(holder.newsbinding.newsImage)
+
     }
 
     override fun getItemCount(): Int {
-      return newsData.size
+        return newsData.size
     }
-    class viewholder(val newsbinding: NewsBinding) : RecyclerView.ViewHolder(newsbinding.root) {
 
+    class viewholder(val newsbinding: NewsBinding) : RecyclerView.ViewHolder(newsbinding.root)
 
-    }
 }
