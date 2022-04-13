@@ -14,7 +14,7 @@ data class News (
     @SerializedName("category" ) var category : String?         = null,
     @SerializedName("data"     ) var data     : ArrayList<NewsData> = arrayListOf(),
     @SerializedName("success"  ) var success  : Boolean?        = null
-
+dd
 )
 
 
