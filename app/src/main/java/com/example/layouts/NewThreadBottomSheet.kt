@@ -29,4 +29,5 @@ class NewThreadBottomSheet : BottomSheetDialogFragment() {
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
 
     }
+
 }

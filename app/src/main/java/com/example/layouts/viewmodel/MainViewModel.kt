@@ -2,7 +2,6 @@ package com.example.layouts.viewmodel
 
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.layouts.NewsRepository
@@ -21,22 +20,32 @@ import retrofit2.Response
 class MainViewModel(private val newsRepository: NewsRepository):ViewModel() {
          val result = newsRepository.result
          val newsdata=MutableLiveData<ArrayList<NewsData>>()
-       fun getNews(){
-              result.enqueue(object : Callback<News>{
-                     override fun onResponse(call: Call<News>, response: Response<News>) {
-                           val data = response.body()
-                            newsdata.postValue(data!!.data)
-                     }
 
-                     override fun onFailure(call: Call<News>, t: Throwable) {
-                        Log.d("Error", t.message!!)
-                     }
-              })
+       fun getNews() {
+               result.clone().enqueue(object : Callback<News> {
+                   override fun onResponse(call: Call<News>, response: Response<News>) {
+                       if (response.isSuccessful) {
+                           val data = response.body()
+                           newsdata.postValue(data?.data)
+
+                       } else {
+                           Log.d("Error", response.errorBody().toString())
+                       }
+
+                   }
+
+                   override fun onFailure(call: Call<News>, t: Throwable) {
+                       Log.d("Error", t.message!!)
+                   }
+
+               })
+
+
+
+
+
 
        }
-
-
-
 
 
 }
