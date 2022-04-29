@@ -21,7 +21,7 @@ import com.squareup.picasso.Picasso
  * EMAIL mohammadsajjad679@gmail.com
  */
 
-class NewsAdapter :
+ class NewsAdapter :
     RecyclerView.Adapter<NewsAdapter.viewholder>() {
 
     private var newsData = ArrayList<NewsData>()
