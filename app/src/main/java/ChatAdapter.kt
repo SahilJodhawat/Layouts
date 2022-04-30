@@ -10,7 +10,7 @@ import com.example.layouts.R
  * EMAIL mohammadsajjad679@gmail.com
  */
 
-class ChatAdapter(var chatlist : ArrayList<ChatModel>,) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ChatAdapter( chatlist : ArrayList<ChatModel>,) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val MSG_RIGHT = 0
     val MSG_LEFT = 1
 
@@ -36,7 +36,7 @@ class ChatAdapter(var chatlist : ArrayList<ChatModel>,) : RecyclerView.Adapter<R
     }
 
     override fun getItemCount(): Int {
-       return chatlist.size
+       return chatList.size
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -55,4 +55,5 @@ class ChatAdapter(var chatlist : ArrayList<ChatModel>,) : RecyclerView.Adapter<R
     inner class ReceiverViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val receiverTxt : TextView = itemView.findViewById(R.id.receiver_txt)
     }
+
 }

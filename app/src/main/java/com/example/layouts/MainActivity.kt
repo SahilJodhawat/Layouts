@@ -36,6 +36,7 @@ import com.google.firebase.database.ktx.getValue
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
+import kotlin.properties.Delegates
 
 
 class MainActivity : AppCompatActivity() {
@@ -43,21 +44,30 @@ class MainActivity : AppCompatActivity() {
 //    lateinit var myPostsBinding: MyPostsBinding
 //     lateinit var recyclerViewBinding : RecyclerViewBinding
      var isScrolling = false
-     var currentItem : Int = 0
-     var totalItem : Int = 0
-     var scrolledItem : Int = 0
+   var currentItem  = 0
+    var totalItem  = 0
+     var scrolledItem  = 0
+    var currentPage  = 1
     //lateinit var adapter : NewsAdapter
     lateinit var adapter : ChatAdapter
+    val chatList = ArrayList<ChatModel>()
+    lateinit var chatRecyclerView : RecyclerView
+    val manager = LinearLayoutManager(this)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        recyclerViewBinding = RecyclerViewBinding.inflate(layoutInflater)
         setContentView(R.layout.adding_data)
-  val chatRecyclerView : RecyclerView = findViewById(R.id.chats_recycler_view)
+   chatRecyclerView = findViewById(R.id.chats_recycler_view)
         val chatEdt : EditText = findViewById(R.id.ent_msg)
         val chatBtn : Button = findViewById(R.id.snd_btn)
         val rcvdBtn : Button = findViewById(R.id.rvd_btn)
-        chatRecyclerView.layoutManager = LinearLayoutManager(this)
-        val chatList = ArrayList<ChatModel>()
+        val chtPrgsBar : ProgressBar = findViewById(R.id.chat_prgs_bar)
+         chatRecyclerView.layoutManager = manager
+
+
+getMsg(currentPage)
+        adapter = ChatAdapter(chatList)
+        chatRecyclerView.adapter = adapter
 
 
 
@@ -79,62 +89,73 @@ class MainActivity : AppCompatActivity() {
                 val map = HashMap<String,Any>()
                 map.put("message",msg)
                 map.put("type","receiver")
-                val key2 = FirebaseDatabase.getInstance().getReference().push().key
                 FirebaseDatabase.getInstance().getReference().child("Chats").push().updateChildren(map)
 
             }
         })
 
-        val ref : DatabaseReference = FirebaseDatabase.getInstance().getReference().child("Chats")
-        ref.addChildEventListener(object : ChildEventListener{
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val model : ChatModel = snapshot.getValue(ChatModel::class.java)!!
-                Log.d("data",snapshot.getValue().toString())
-                if (model.type.equals("sender") || model.type.equals("receiver")){
-                    chatList.add(model)
+        chatRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
+                    isScrolling = true
                 }
-                val adapter = ChatAdapter(chatList)
-                adapter.notifyDataSetChanged()
-                chatRecyclerView.adapter = adapter
-                val newMsgPosition: Int = chatList.size - 1
-                // Notify recycler view insert one new data.
-                // Notify recycler view insert one new data.
-
-                adapter.notifyItemInserted(newMsgPosition)
-                // Scroll RecyclerView to the last message.
-                // Scroll RecyclerView to the last message.
-                chatRecyclerView.scrollToPosition(newMsgPosition)
-                // Empty the input edit text box.
-                // Empty the input edit text box.
-
-                chatEdt.setText("")
-                chatRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-
-                    }
-                })
-
-
             }
 
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                TODO("Not yet implemented")
-            }
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                currentItem = manager.childCount
+                scrolledItem = manager.findFirstVisibleItemPosition()
+                totalItem = manager.itemCount
+                Log.d("count",totalItem.toString())
+                if (isScrolling && (currentItem + scrolledItem == totalItem)){
+                //    chatList.clear()
+                    isScrolling = false
+                    currentPage++
+                    chtPrgsBar.visibility = VISIBLE
+                    Handler(Looper.getMainLooper()).postDelayed(object : Runnable{
+                        override fun run() {
+                            getMsg(currentPage)
+                            chatList.addAll(chatList)
+                            Log.d("kk",chatList.size.toString())
+                            chtPrgsBar.visibility = GONE
+                        }
 
-            override fun onChildRemoved(snapshot: DataSnapshot) {
-                TODO("Not yet implemented")
-            }
+                    },4000)
 
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                TODO("Not yet implemented")
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
 
+
+
+                }
+            }
         })
 
+
+//        Log.d("count",manager.itemCount.toString())
+//        Log.d("countCurrent",manager.childCount.toString())
+//        val query2 : Query = FirebaseDatabase.getInstance().reference.child("Chats").orderByKey().limitToLast(20)
+//        query2.addChildEventListener(object : ChildEventListener{
+//            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+//            val model : ChatModel = snapshot.getValue(ChatModel::class.java)!!
+//                chatList.add(model)
+//            }
+//
+//            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+//                TODO("Not yet implemented")
+//            }
+//
+//            override fun onChildRemoved(snapshot: DataSnapshot) {
+//                TODO("Not yet implemented")
+//            }
+//
+//            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+//                TODO("Not yet implemented")
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//                TODO("Not yet implemented")
+//            }
+//
+//        })
 //ref.addValueEventListener(object : ValueEventListener{
 //    override fun onDataChange(snapshot: DataSnapshot) {
 //        val model = snapshot.getValue(ChatModel::class.java)!!
@@ -266,6 +287,63 @@ class MainActivity : AppCompatActivity() {
 //        recyclerViewBinding.shimmerLayout.stopShimmer()
 //
 //    }
+
+    }
+
+    private fun getMsg(pageNo : Int) {
+        val ref = FirebaseDatabase.getInstance().getReference().child("Chats")
+        val query = ref.limitToLast(pageNo * 20)
+        query.addChildEventListener(object : ChildEventListener{
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                //ref.limitToLast(20)
+                val model : ChatModel = snapshot.getValue(ChatModel::class.java)!!
+                Log.d("data",snapshot.getValue().toString())
+                //     if (model.type.equals("sender") || model.type.equals("receiver")){
+                chatList.add(model)
+                Log.d("size",chatList.size.toString())
+                //        }
+
+
+//                val adapter = ChatAdapter(chatList)
+                adapter.notifyDataSetChanged()
+//                chatRecyclerView.adapter = adapter
+                val newMsgPosition: Int = chatList.size - 1
+                // Notify recycler view insert one new data.
+                // Notify recycler view insert one new data.
+
+                adapter.notifyItemInserted(newMsgPosition)
+                // Scroll RecyclerView to the last message.
+                // Scroll RecyclerView to the last message.
+               //  chatRecyclerView.scrollToPosition(newMsgPosition)
+                // Empty the input edit text box.
+                // Empty the input edit text box.
+
+
+
+
+
+
+
+
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
 
     }
 
