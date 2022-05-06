@@ -56,4 +56,11 @@ class ChatAdapter( chatlist : ArrayList<ChatModel>,) : RecyclerView.Adapter<Recy
         val receiverTxt : TextView = itemView.findViewById(R.id.receiver_txt)
     }
 
+    fun addMoreItems(newItems : ArrayList<ChatModel>){
+        val previousItems = chatList.size
+          chatList.addAll(newItems)
+
+        notifyItemRangeInserted(previousItems,newItems.size)
+    }
+
 }
