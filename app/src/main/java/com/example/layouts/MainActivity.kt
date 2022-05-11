@@ -3,47 +3,30 @@ package com.example.layouts
 
 import ChatAdapter
 import ChatModel
-import android.app.Activity
-import android.icu.number.IntegerWidth
-import android.os.Build
+import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.provider.SyncStateContract
-import android.renderscript.Sampler
 import android.util.Log
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.view.Window
-import android.view.WindowManager
-import android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
-import android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.layouts.adater.NewsAdapter
-import com.example.layouts.api.NewsAPI
-import com.example.layouts.api.NewsAPI.Companion.newsApi
 
 //import com.example.layouts.databinding.MyPostsBinding
 //import com.example.layouts.databinding.RecyclerViewBinding
 import com.example.layouts.viewmodel.MainViewModel
-import com.example.layouts.viewmodel.MainViewModelFactory
 import com.google.firebase.database.*
-import com.google.firebase.database.core.Constants
-import com.google.firebase.database.ktx.getValue
-import java.util.*
+import com.squareup.picasso.Picasso
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
-import kotlin.properties.Delegates
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),ChatAdapter.QuoteClickListener{
     private lateinit var mainViewModel: MainViewModel
 
     //    lateinit var myPostsBinding: MyPostsBinding
@@ -57,79 +40,112 @@ class MainActivity : AppCompatActivity() {
     var endResult = false
 var first = true
 
+
     //lateinit var adapter : NewsAdapter
     lateinit var adapter: ChatAdapter
     val chatList = ArrayList<ChatModel>()
     val tempChatList = ArrayList<ChatModel>()
     lateinit var chatRecyclerView: RecyclerView
+    lateinit var chatBtn : Button
+    lateinit var chatEdt : EditText
+    lateinit var chtPrgsBar : ProgressBar
+    lateinit var txtQuotedmsg : TextView
+    lateinit var replyLayout : ConstraintLayout
+    lateinit var rcvdBtn : Button
+    lateinit var cancelBtn : ImageButton
+    var quotePos : Int = 0
+
+
     val manager = LinearLayoutManager(this)
     var previousKey : String = ""
     var lastKey: String = ""
     var itempos = 0
     var key : String = ""
     var newKey : String = ""
+    var totalCount = 25
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        recyclerViewBinding = RecyclerViewBinding.inflate(layoutInflater)
         setContentView(R.layout.adding_data)
 
         chatRecyclerView = findViewById(R.id.chats_recycler_view)
-        val chatEdt: EditText = findViewById(R.id.ent_msg)
-        val chatBtn: Button = findViewById(R.id.snd_btn)
-        val rcvdBtn: Button = findViewById(R.id.rvd_btn)
-        val chtPrgsBar: ProgressBar = findViewById(R.id.chat_prgs_bar)
+
+         chatEdt = findViewById(R.id.ent_msg)
+        chatBtn = findViewById(R.id.snd_btn)
+         rcvdBtn = findViewById(R.id.rvd_btn)
+         chtPrgsBar = findViewById(R.id.chat_prgs_bar)
+         txtQuotedmsg = findViewById(R.id.txtQuotedMsg)
+         replyLayout = findViewById(R.id.reply_layout)
+        cancelBtn = findViewById(R.id.cancelButton)
         chatRecyclerView.layoutManager = manager
       //  manager.reverseLayout = true
+
         val query1 = FirebaseDatabase.getInstance().getReference().child("Chats")
-        val query = FirebaseDatabase.getInstance().getReference().child("Chats").orderByKey().limitToLast(25)
-        query.addChildEventListener(object : ChildEventListener{
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val model = snapshot.getValue(ChatModel::class.java)!!
-                chatList.add(model)
-                previousKey = snapshot.key!!
-                Log.d("dsKey",previousKey)
-                val previouspos = chatList.size - 1
-                adapter.notifyItemInserted(previouspos)
-                chatRecyclerView.scrollToPosition(previouspos)
 
 
-                for (ds in snapshot.children){
-                    itempos++
-                    Log.d("itempos",itempos.toString())
-                    Log.d("childCount",ds.children.count().toString())
-                    if ( first){
+            val query = FirebaseDatabase.getInstance().getReference().child("Chats").limitToLast(totalCount)
+          query.addChildEventListener(object : ChildEventListener {
 
-                         key = snapshot.key!!
+                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
 
-                        Log.d("Keyyy",snapshot.key!!)
+                    var model = snapshot.getValue(ChatModel::class.java)!!
+
+
+    chatList.add(model)
+
+Log.d("modelCount",snapshot.childrenCount.toString())
+
+
+Log.d("model",model.toString())
+
+
+
+
+                    previousKey = snapshot.key!!
+                    Log.d("dsKey", previousKey)
+                    chatRecyclerView.scrollToPosition(chatList.size - 1)
+
+
+                    for (ds in snapshot.children) {
+                        itempos++
+                        Log.d("itempos", itempos.toString())
+                        Log.d("childCount", ds.children.count().toString())
+                        if (first) {
+
+                            key = snapshot.key!!
+
+                            Log.d("Keyyy", snapshot.key!!)
+                        }
+                        first = false
                     }
-                    first = false
-                }
-
 
 
 //                lastKey = snapshot.key!!
 //                Log.i("LAST",lastKey)
 
-            }
+                }
 
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                TODO("Not yet implemented")
-            }
+                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                    adapter.notifyDataSetChanged()
 
-            override fun onChildRemoved(snapshot: DataSnapshot) {
+                }
 
-            }
+                override fun onChildRemoved(snapshot: DataSnapshot) {
+                    adapter.notifyDataSetChanged()
+                }
 
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                TODO("Not yet implemented")
-            }
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                    TODO("Not yet implemented")
+                }
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
 
-        })
+            })
+
+
 val ref = FirebaseDatabase.getInstance().getReference().child("Chats").orderByKey()
 ref.addListenerForSingleValueEvent(object : ValueEventListener{
     override fun onDataChange(snapshot: DataSnapshot) {
@@ -152,35 +168,91 @@ ref.addListenerForSingleValueEvent(object : ValueEventListener{
 })
         adapter = ChatAdapter(chatList)
         chatRecyclerView.adapter = adapter
-
         Log.d("kk",chatList.size.toString())
         chatEdt.text.clear()
         //  chatList.clear()
+      val messageSwipeController = MessageSwipeController(this,object : SwipeControllerActions() {
+          override fun showReplyUI(position: Int) {
+              quotePos = position
+    showMessgae(chatList.get(position))
+          }
+
+      })
+        val itemTouchHelper = ItemTouchHelper(messageSwipeController)
+        itemTouchHelper.attachToRecyclerView(chatRecyclerView)
+cancelBtn.setOnClickListener(object : View.OnClickListener{
+    override fun onClick(p0: View?) {
+        replyLayout.visibility = GONE
+    }
+
+})
 
         chatBtn.setOnClickListener(object : View.OnClickListener {
+
             override fun onClick(p0: View?) {
-                val msg: String = chatEdt.text.toString()
-                val map = HashMap<String, Any>()
-                map.put("message", msg)
-                map.put("type", "sender")
-                val key = FirebaseDatabase.getInstance().getReference().push().key
-                FirebaseDatabase.getInstance().getReference().child("Chats").push()
-                    .updateChildren(map)
+                if (!chatEdt.text.isEmpty()){
+                    if (replyLayout.visibility == VISIBLE){
+                        replyLayout.visibility = GONE
+
+                        val msg : String = chatEdt.text.toString()
+                        val map = HashMap<String,Any>()
+                        map.put("message",msg)
+                        map.put("type","sender")
+                        map.put("quotepos",quotePos)
+                        map.put("quote",txtQuotedmsg.text.toString())
+
+                        FirebaseDatabase.getInstance().getReference().child("Chats").push()
+                            .updateChildren(map)
+                    }else{
+                        val msg: String = chatEdt.text.toString()
+                        val map = HashMap<String, Any>()
+                        map.put("message", msg)
+                        map.put("type", "sender")
+                        FirebaseDatabase.getInstance().getReference().child("Chats").push()
+                            .updateChildren(map)
+                    }
+
+
+                }
                 chatEdt.text.clear()
+
+
             }
 
         })
+
+
+
         rcvdBtn.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
-                val msg: String = chatEdt.text.toString()
-                val map = HashMap<String, Any>()
-                map.put("message", msg)
-                map.put("type", "receiver")
-                FirebaseDatabase.getInstance().getReference().child("Chats").push()
-                    .updateChildren(map)
-chatEdt.text.clear()
+                if (!chatEdt.text.isEmpty()){
+                    if (replyLayout.visibility == VISIBLE){
+                        replyLayout.visibility = GONE
+                        val msg : String = chatEdt.text.toString()
+                        val map = HashMap<String,Any>()
+                        map.put("message",msg)
+                        map.put("type","receiver")
+                        map.put("quotepos",quotePos)
+                        map.put("quote",txtQuotedmsg.text.toString())
+                        FirebaseDatabase.getInstance().getReference().child("Chats").push()
+                            .updateChildren(map)
+                    }else{
+                        val msg: String = chatEdt.text.toString()
+                        val map = HashMap<String, Any>()
+                        map.put("message", msg)
+                        map.put("type", "receiver")
+                        FirebaseDatabase.getInstance().getReference().push().key!!
+                        FirebaseDatabase.getInstance().getReference().child("Chats").push()
+                            .updateChildren(map)
+                    }
+
+
+                }
+                chatEdt.text.clear()
+
             }
         })
+
 chatRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
     override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
         if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
@@ -198,9 +270,10 @@ chatRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             isScrolling = false
             chtPrgsBar.visibility = VISIBLE
             Log.d("newkey",key.toString())
-Handler(Looper.getMainLooper()).postDelayed(object : Runnable{
-    override fun run() {
-        val ref2 = FirebaseDatabase.getInstance().getReference().child("Chats").endAt(key).limitToLast(10).orderByKey()
+
+
+        val ref2 = FirebaseDatabase.getInstance().getReference().child("Chats").endAt(key).limitToLast(10 ).orderByKey()
+
         ref2.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
 
@@ -213,18 +286,24 @@ Handler(Looper.getMainLooper()).postDelayed(object : Runnable{
                    else if (count == 1){
                         key = ds.key!!
                         Log.d("itemKey",ds.key!!)
+
                     }
                     Log.d("values",snapshot.childrenCount.toString())
-                    val model  = ds.getValue(ChatModel::class.java)!!
+                    var model  = ds.getValue(ChatModel::class.java)!!
                     Log.d("model",model.toString())
+                    tempChatList.add(model)
 
-                    chatList.add(count - 1,model)
-                    adapter.notifyDataSetChanged()
-                    chtPrgsBar.visibility = GONE
-                    Log.d("count",count.toString())
 
 
                 }
+                chatList.addAll(0,tempChatList)
+
+
+
+                chtPrgsBar.visibility = GONE
+                Log.d("count",count.toString())
+                adapter.notifyDataSetChanged()
+
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -232,14 +311,13 @@ Handler(Looper.getMainLooper()).postDelayed(object : Runnable{
             }
 
         })
-    }
 
-},4000)
+
+
 
         }
     }
 })
-
 
 
 
@@ -398,11 +476,20 @@ Handler(Looper.getMainLooper()).postDelayed(object : Runnable{
 //    }
 
     }
+    fun showMessgae(chatModel: ChatModel){
+        chatEdt.requestFocus()
+        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.showSoftInput(chatEdt, InputMethodManager.SHOW_IMPLICIT)
+        txtQuotedmsg.text = chatModel.message
 
-
-
-
-
+            replyLayout.visibility = View.VISIBLE
 
     }
+
+    override fun onQuoteClick(position: Int) {
+        chatRecyclerView.smoothScrollToPosition(position - 1)
+    }
+
+
+}
 
