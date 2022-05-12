@@ -4,6 +4,7 @@ package com.example.layouts
 import ChatAdapter
 import ChatModel
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,6 +12,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -81,7 +83,7 @@ var first = true
         chatRecyclerView.layoutManager = manager
       //  manager.reverseLayout = true
 
-        val query1 = FirebaseDatabase.getInstance().getReference().child("Chats")
+
 
 
             val query = FirebaseDatabase.getInstance().getReference().child("Chats").limitToLast(totalCount)
@@ -213,6 +215,8 @@ cancelBtn.setOnClickListener(object : View.OnClickListener{
                     }
 
 
+                }else{
+                    Toast.makeText(this@MainActivity,"Please enter Message",Toast.LENGTH_SHORT).show()
                 }
                 chatEdt.text.clear()
 
@@ -247,6 +251,8 @@ cancelBtn.setOnClickListener(object : View.OnClickListener{
                     }
 
 
+                }else{
+                    Toast.makeText(this@MainActivity,"Please enter Message",Toast.LENGTH_SHORT).show()
                 }
                 chatEdt.text.clear()
 
@@ -275,6 +281,7 @@ chatRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
         val ref2 = FirebaseDatabase.getInstance().getReference().child("Chats").endAt(key).limitToLast(10 ).orderByKey()
 
         ref2.addValueEventListener(object : ValueEventListener{
+            @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {
 
                 var count = 0

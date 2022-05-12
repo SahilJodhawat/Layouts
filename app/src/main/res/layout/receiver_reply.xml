@@ -7,11 +7,10 @@
     android:padding="8dp"
     android:layout_marginStart="8dp"
     android:layout_marginTop="4dp"
-    android:layout_marginEnd="8dp"
+    android:layout_marginEnd="220dp"
     android:layout_marginBottom="4dp"
     android:layout_height="wrap_content"
-    android:background="@drawable/left_tv_bg"
-    android:layout_gravity="end">
+    android:background="@drawable/left_tv_bg">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/reply1"
@@ -22,8 +21,7 @@
         android:paddingStart="4dp"
         android:paddingTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:foregroundGravity="left">
+        app:layout_constraintTop_toTopOf="parent">
 
         <View
             android:id="@+id/image_line"
@@ -38,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
             android:id="@+id/name"
-            android:text="Receiver"
+            android:text="Sender"
             app:layout_constraintStart_toStartOf="@+id/image_line"
             app:layout_constraintTop_toTopOf="parent" />
 
