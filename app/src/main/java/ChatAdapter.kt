@@ -50,17 +50,19 @@ open class ChatAdapter( chatlist : ArrayList<ChatModel>) : RecyclerView.Adapter<
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (chatList.get(holder.adapterPosition).type.equals("sender") && chatList.get(holder.adapterPosition).quotepos == -1) {
+
             (holder as SenderViewHolder).senderTxt.text =
                 chatList.get(holder.adapterPosition).message
+
             (holder as SenderViewHolder).senderTxt.setOnLongClickListener(object : View.OnLongClickListener{
                 override fun onLongClick(p0: View?): Boolean {
                     val builder : AlertDialog.Builder = AlertDialog.Builder(p0!!.context)
                     builder.setMessage("Are you sure you want to delete this message?")
                         .setPositiveButton("Yes",object : DialogInterface.OnClickListener{
                             override fun onClick(p0: DialogInterface?, p1: Int) {
-                                var msg = chatList.get(position).message
-                                Log.d("msg",msg.toString())
-                                Log.d("pos",(holder as SenderViewHolder).pos.toString())
+                                var msg = chatList.get(holder.adapterPosition).message
+                                Log.d("msg1",msg.toString())
+//                                Log.d("pos",(holder as SenderViewHolder).pos.toString())
                                 val ref = FirebaseDatabase.getInstance().getReference().child("Chats").orderByChild("message").equalTo(msg)
                                 ref.addListenerForSingleValueEvent(object : ValueEventListener{
                                     override fun onDataChange(snapshot: DataSnapshot) {
@@ -69,21 +71,17 @@ open class ChatAdapter( chatlist : ArrayList<ChatModel>) : RecyclerView.Adapter<
                                         for (ds in snapshot.children){
                                             Log.d("refKey1",ds.value.toString())
                                             Log.d("key3",ds.key!!)
-//                                    val map = HashMap<String,Any>()
-//                                            map.put("message","this is message is deleted")
-//                                            map.put("type","sender")
-//                                            ds.ref.updateChildren(map)
+                                            val map = HashMap<String,Any>()
+                                            map.put("message","this is message is deleted")
+                                            map.put("type","sender")
+                                            ds.ref.updateChildren(map)
 
-ds.ref.removeValue()
+
 
 
                                         }
-
                                         chatList.remove(chatList.get(holder.adapterPosition))
-
                                         notifyItemRemoved(holder.adapterPosition)
-
-
 
                                     }
 
@@ -107,9 +105,6 @@ ds.ref.removeValue()
 
 
 
-
-
-
         }else if(chatList.get(holder.adapterPosition).type.equals("receiver") && chatList.get(holder.adapterPosition).quotepos == -1){
             (holder as ReceiverViewHolder).receiverTxt.text =
                 chatList.get(holder.adapterPosition).message
@@ -121,7 +116,7 @@ ds.ref.removeValue()
                         .setPositiveButton("Yes",object : DialogInterface.OnClickListener{
                             override fun onClick(p0: DialogInterface?, p1: Int) {
                                 var msg = chatList.get(holder.adapterPosition).message
-                                Log.d("msg",msg.toString())
+                                Log.d("msg1",msg.toString())
 //                                Log.d("pos",(holder as SenderViewHolder).pos.toString())
                                 val ref = FirebaseDatabase.getInstance().getReference().child("Chats").orderByChild("message").equalTo(msg)
                                 ref.addListenerForSingleValueEvent(object : ValueEventListener{
@@ -131,7 +126,11 @@ ds.ref.removeValue()
                                         for (ds in snapshot.children){
                                             Log.d("refKey1",ds.value.toString())
                                             Log.d("key3",ds.key!!)
-                                            ds.ref.removeValue()
+                                            val map = HashMap<String,Any>()
+                                            map.put("message","this is message is deleted")
+                                            map.put("type","receiver")
+                                            ds.ref.updateChildren(map)
+
 
 
 
@@ -176,7 +175,7 @@ ds.ref.removeValue()
                         .setPositiveButton("Yes",object : DialogInterface.OnClickListener{
                             override fun onClick(p0: DialogInterface?, p1: Int) {
                                 var msg = chatList.get(holder.adapterPosition).message
-                                Log.d("msg",msg.toString())
+                                Log.d("msg1",msg.toString())
 //                                Log.d("pos",(holder as SenderViewHolder).pos.toString())
                                 val ref = FirebaseDatabase.getInstance().getReference().child("Chats").orderByChild("message").equalTo(msg)
                                 ref.addListenerForSingleValueEvent(object : ValueEventListener{
@@ -186,13 +185,18 @@ ds.ref.removeValue()
                                         for (ds in snapshot.children){
                                             Log.d("refKey1",ds.value.toString())
                                             Log.d("key3",ds.key!!)
-                                            ds.ref.removeValue()
+                                            val map = HashMap<String,Any>()
+                                            map.put("message","this is message is deleted")
+                                            map.put("type","sender")
+                                            map.put("quotepos",holder.adapterPosition)
+                                            map.put("quote","")
+                                            ds.ref.updateChildren(map)
+                                            notifyItemChanged(holder.adapterPosition)
 
 
 
                                         }
                                         chatList.remove(chatList.get(holder.adapterPosition))
-
                                         notifyItemRemoved(holder.adapterPosition)
 
 
@@ -230,7 +234,7 @@ ds.ref.removeValue()
                         .setPositiveButton("Yes",object : DialogInterface.OnClickListener{
                             override fun onClick(p0: DialogInterface?, p1: Int) {
                                 var msg = chatList.get(holder.adapterPosition).message
-                                Log.d("msg",msg.toString())
+                                Log.d("msg1",msg.toString())
 //                                Log.d("pos",(holder as SenderViewHolder).pos.toString())
                                 val ref = FirebaseDatabase.getInstance().getReference().child("Chats").orderByChild("message").equalTo(msg)
                                 ref.addListenerForSingleValueEvent(object : ValueEventListener{
@@ -238,9 +242,13 @@ ds.ref.removeValue()
                                         Log.d("refKey",snapshot.value.toString())
                                         var count = 0
                                         for (ds in snapshot.children){
-                                            Log.d("refKey1",ds.value.toString())
-                                            Log.d("key3",ds.key!!)
-                                            ds.ref.removeValue()
+                                            val map = HashMap<String,Any>()
+                                            map.put("message","this is message is deleted")
+                                            map.put("type","receiver")
+                                            map.put("quotepos",holder.adapterPosition)
+                                            map.put("quote","")
+                                            ds.ref.updateChildren(map)
+                                            notifyItemChanged(holder.adapterPosition)
 
 
 

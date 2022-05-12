@@ -62,7 +62,7 @@ var first = true
     var previousKey : String = ""
     var lastKey: String = ""
     var itempos = 0
-    var key : String = ""
+    var key : String? = ""
     var newKey : String = ""
     var totalCount = 25
 
@@ -86,16 +86,17 @@ var first = true
 
 
 
-            val query = FirebaseDatabase.getInstance().getReference().child("Chats").limitToLast(totalCount)
+            val query = FirebaseDatabase.getInstance().getReference().child("Chats").limitToLast(totalCount).orderByKey()
           query.addChildEventListener(object : ChildEventListener {
 
                 override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
 
-                    var model = snapshot.getValue(ChatModel::class.java)!!
+                    var model : ChatModel = snapshot.getValue(ChatModel::class.java)!!
 
 
     chatList.add(model)
 
+adapter.notifyItemChanged(chatList.indexOf(model))
 Log.d("modelCount",snapshot.childrenCount.toString())
 
 
@@ -118,8 +119,9 @@ Log.d("model",model.toString())
                             key = snapshot.key!!
 
                             Log.d("Keyyy", snapshot.key!!)
+                            first = false
                         }
-                        first = false
+
                     }
 
 
@@ -168,10 +170,7 @@ ref.addListenerForSingleValueEvent(object : ValueEventListener{
     }
 
 })
-        adapter = ChatAdapter(chatList)
-        chatRecyclerView.adapter = adapter
-        Log.d("kk",chatList.size.toString())
-        chatEdt.text.clear()
+
         //  chatList.clear()
       val messageSwipeController = MessageSwipeController(this,object : SwipeControllerActions() {
           override fun showReplyUI(position: Int) {
@@ -188,6 +187,11 @@ cancelBtn.setOnClickListener(object : View.OnClickListener{
     }
 
 })
+        adapter = ChatAdapter(chatList)
+        chatRecyclerView.adapter = adapter
+        Log.d("kk",chatList.size.toString())
+        chatEdt.text.clear()
+
 
         chatBtn.setOnClickListener(object : View.OnClickListener {
 
@@ -245,7 +249,7 @@ cancelBtn.setOnClickListener(object : View.OnClickListener{
                         val map = HashMap<String, Any>()
                         map.put("message", msg)
                         map.put("type", "receiver")
-                        FirebaseDatabase.getInstance().getReference().push().key!!
+                       // FirebaseDatabase.getInstance().getReference().push().key!!
                         FirebaseDatabase.getInstance().getReference().child("Chats").push()
                             .updateChildren(map)
                     }
@@ -278,39 +282,42 @@ chatRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             Log.d("newkey",key.toString())
 
 
-        val ref2 = FirebaseDatabase.getInstance().getReference().child("Chats").endAt(key).limitToLast(10 ).orderByKey()
+        val ref2 = FirebaseDatabase.getInstance().getReference().child("Chats").limitToLast(10 - 1).endAt(key).orderByKey()
 
         ref2.addValueEventListener(object : ValueEventListener{
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {
 
                 var count = 0
-                for (ds in snapshot.children){
+                for (ds in snapshot.children) {
                     count++
-                    if (snapshot.childrenCount < 10 ){
+                    if (snapshot.childrenCount < 10 - 1) {
                         endResult = true
-                    }
-                   else if (count == 1){
+                    } else if (count == 1) {
                         key = ds.key!!
-                        Log.d("itemKey",ds.key!!)
+                        Log.d("itemKey", ds.key!!)
 
                     }
-                    Log.d("values",snapshot.childrenCount.toString())
-                    var model  = ds.getValue(ChatModel::class.java)!!
-                    Log.d("model",model.toString())
-                    tempChatList.add(model)
+                        Log.d("values", snapshot.childrenCount.toString())
+                        var model = ds.getValue(ChatModel::class.java)!!
+                        Log.d("model1", model.toString())
+
+
+    tempChatList.add(model)
+
+
+                    }
+chatList.addAll(0,tempChatList)
+                tempChatList.clear()
 
 
 
-                }
-                chatList.addAll(0,tempChatList)
 
 
-
-                chtPrgsBar.visibility = GONE
-                Log.d("count",count.toString())
                 adapter.notifyDataSetChanged()
 
+                chtPrgsBar.visibility = GONE
+                Log.d("count", count.toString())
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -495,6 +502,7 @@ chatRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
 
     override fun onQuoteClick(position: Int) {
         chatRecyclerView.smoothScrollToPosition(position - 1)
+
     }
 
 
