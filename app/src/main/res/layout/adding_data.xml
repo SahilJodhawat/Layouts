@@ -5,23 +5,67 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/dips_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/back_button2"
+            tools:ignore="ContentDescription" />
+
+
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:roundPercent="1"
+            android:layout_marginStart="40dp"
+            android:background="#4C4B4B"
+            app:srcCompat="@drawable/academy"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:fontFamily="@font/roboto_bold"
+            android:text="@string/dips_academy9"
+            android:textColor="#292724"
+            android:textSize="21dp" />
+
+
+    </androidx.appcompat.widget.Toolbar>
+    <View
+        android:id="@+id/view"
+        android:layout_width="0dp"
+        android:layout_height="3dp"
+        android:layout_marginTop="1dp"
+        android:background="#E1DFDF"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dips_toolbar" />
 
 <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/chats_recycler_view"
     android:layout_width="match_parent"
     android:layout_height="550dp"
+    android:background="#EAF4FB"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toTopOf="parent"/>
+    app:layout_constraintTop_toBottomOf="@id/view"/>
 
     <ProgressBar
         android:id="@+id/chat_prgs_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         style="@style/TextAppearance.AppCompat.Large"
         android:visibility="gone"/>
 
@@ -71,33 +115,55 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chats_recycler_view"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="580dp"
         android:orientation="horizontal">
-<Button
-    android:id="@+id/rvd_btn"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="received"
-    android:textColor="@color/white"
-    android:backgroundTint="#E42323"
-    android:layout_marginStart="1dp"/>
+
         <EditText
             android:id="@+id/ent_msg"
-            android:layout_width="200dp"
+            android:layout_width="330dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:hint="Type a message" />
+            android:hint="Type a message"
+            android:fontFamily="@font/poppins"
+            android:padding="10dp"/>
 
-        <Button
-            android:id="@+id/snd_btn"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="send"
-            android:textColor="@color/black"
-            android:backgroundTint="#38E13F"/>
+            android:src="@drawable/attachment"
+            android:layout_marginTop="5dp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/microphone"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"/>
+
+
 
 
 
     </LinearLayout>
+    <Button
+        android:id="@+id/rvd_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="received"
+        android:textColor="@color/white"
+        android:backgroundTint="#E42323"
+        android:layout_marginStart="1dp"
+        app:layout_constraintTop_toBottomOf="@id/editor_layout"
+        app:layout_constraintStart_toStartOf="parent"/>
+    <Button
+        android:id="@+id/snd_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="send"
+        android:textColor="@color/black"
+        android:backgroundTint="#38E13F"
+        app:layout_constraintTop_toBottomOf="@id/editor_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginLeft="320dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

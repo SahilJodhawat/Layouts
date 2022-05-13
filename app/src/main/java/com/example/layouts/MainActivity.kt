@@ -24,6 +24,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.layouts.viewmodel.MainViewModel
 import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
@@ -65,6 +68,7 @@ var first = true
     var key : String? = ""
     var newKey : String = ""
     var totalCount = 25
+    var dateformat : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,6 +77,13 @@ var first = true
 
         chatRecyclerView = findViewById(R.id.chats_recycler_view)
 
+        Log.d("date&Time",dateformat)
+      //  val d = SimpleDateFormat().parse(dateformat)
+//        Log.d("date",d.toString())
+//        val cal = Calendar.getInstance()
+//        cal.time = d
+//        val e = SimpleDateFormat("d,MMM").format(cal.time)
+//Log.d("month",e)
          chatEdt = findViewById(R.id.ent_msg)
         chatBtn = findViewById(R.id.snd_btn)
          rcvdBtn = findViewById(R.id.rvd_btn)
@@ -82,7 +93,7 @@ var first = true
         cancelBtn = findViewById(R.id.cancelButton)
         chatRecyclerView.layoutManager = manager
       //  manager.reverseLayout = true
-
+supportActionBar!!.hide()
 
 
 
@@ -196,6 +207,8 @@ cancelBtn.setOnClickListener(object : View.OnClickListener{
         chatBtn.setOnClickListener(object : View.OnClickListener {
 
             override fun onClick(p0: View?) {
+                var s = System.currentTimeMillis()
+                dateformat = SimpleDateFormat("d,MMM,y,hh:mm:ss a", Locale.ENGLISH).format(s)
                 if (!chatEdt.text.isEmpty()){
                     if (replyLayout.visibility == VISIBLE){
                         replyLayout.visibility = GONE
@@ -204,8 +217,10 @@ cancelBtn.setOnClickListener(object : View.OnClickListener{
                         val map = HashMap<String,Any>()
                         map.put("message",msg)
                         map.put("type","sender")
+                        map.put("dateFormat",dateformat)
                         map.put("quotepos",quotePos)
                         map.put("quote",txtQuotedmsg.text.toString())
+
 
                         FirebaseDatabase.getInstance().getReference().child("Chats").push()
                             .updateChildren(map)
@@ -214,6 +229,7 @@ cancelBtn.setOnClickListener(object : View.OnClickListener{
                         val map = HashMap<String, Any>()
                         map.put("message", msg)
                         map.put("type", "sender")
+                        map.put("dateFormat",dateformat)
                         FirebaseDatabase.getInstance().getReference().child("Chats").push()
                             .updateChildren(map)
                     }
@@ -233,6 +249,8 @@ cancelBtn.setOnClickListener(object : View.OnClickListener{
 
         rcvdBtn.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
+                var s = System.currentTimeMillis()
+                dateformat = SimpleDateFormat("d,MMM,y,hh:mm:ss a", Locale.ENGLISH).format(s)
                 if (!chatEdt.text.isEmpty()){
                     if (replyLayout.visibility == VISIBLE){
                         replyLayout.visibility = GONE
@@ -240,8 +258,10 @@ cancelBtn.setOnClickListener(object : View.OnClickListener{
                         val map = HashMap<String,Any>()
                         map.put("message",msg)
                         map.put("type","receiver")
+                        map.put("dateFormat",dateformat)
                         map.put("quotepos",quotePos)
                         map.put("quote",txtQuotedmsg.text.toString())
+
                         FirebaseDatabase.getInstance().getReference().child("Chats").push()
                             .updateChildren(map)
                     }else{
@@ -249,6 +269,7 @@ cancelBtn.setOnClickListener(object : View.OnClickListener{
                         val map = HashMap<String, Any>()
                         map.put("message", msg)
                         map.put("type", "receiver")
+                        map.put("dateFormat",dateformat)
                        // FirebaseDatabase.getInstance().getReference().push().key!!
                         FirebaseDatabase.getInstance().getReference().child("Chats").push()
                             .updateChildren(map)
@@ -282,16 +303,15 @@ chatRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             Log.d("newkey",key.toString())
 
 
-        val ref2 = FirebaseDatabase.getInstance().getReference().child("Chats").limitToLast(10 - 1).endAt(key).orderByKey()
+        val ref2 = FirebaseDatabase.getInstance().getReference().child("Chats").limitToLast(10).orderByKey().endBefore(key)
 
         ref2.addValueEventListener(object : ValueEventListener{
-            @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {
 
                 var count = 0
                 for (ds in snapshot.children) {
                     count++
-                    if (snapshot.childrenCount < 10 - 1) {
+                    if (snapshot.childrenCount < 10) {
                         endResult = true
                     } else if (count == 1) {
                         key = ds.key!!

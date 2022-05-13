@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 <size
-    android:width="30dp"
-    android:height="30dp">
+    android:width="0dp"
+    android:height="0dp">
 
 </size>
-    <solid android:color="#D5D3D3"/>
+    <stroke
+        android:width="0.5dp"
+        android:color="@color/black"/>
+
+    <solid android:color="#FFFFFF"/>
     <corners
-        android:bottomLeftRadius="2dp"
-        android:bottomRightRadius="15dp"
-        android:topLeftRadius="15dp"
-        android:topRightRadius="15dp"/>
+        android:bottomLeftRadius="0dp"
+        android:bottomRightRadius="36dp"
+        android:topLeftRadius="36dp"
+        android:topRightRadius="36dp"/>
 
 </shape>

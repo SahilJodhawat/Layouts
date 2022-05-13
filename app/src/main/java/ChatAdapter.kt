@@ -28,6 +28,8 @@ open class ChatAdapter( chatlist : ArrayList<ChatModel>) : RecyclerView.Adapter<
 
     var chatList : ArrayList<ChatModel> = chatlist
     interface QuoteClickListener {
+
+
         fun onQuoteClick(position: Int)
     }
     private var mQuoteClickListener: QuoteClickListener? = null
@@ -53,6 +55,23 @@ open class ChatAdapter( chatlist : ArrayList<ChatModel>) : RecyclerView.Adapter<
 
             (holder as SenderViewHolder).senderTxt.text =
                 chatList.get(holder.adapterPosition).message
+            var previousMsg : String? = ""
+            if (holder.adapterPosition > 1){
+                 previousMsg = chatList.get(holder.adapterPosition).dateFormat!!.substring(0,6)
+            }
+            if (previousMsg == chatList.get(holder.adapterPosition).dateFormat!! ){
+                (holder as SenderViewHolder).date.visibility = View.VISIBLE
+                (holder as SenderViewHolder).date.text = chatList.get(holder.adapterPosition).dateFormat!!
+            }else if(chatList.get(holder.adapterPosition).dateFormat!! ==
+                    previousMsg){
+                (holder as SenderViewHolder).date.visibility = View.GONE
+                (holder as SenderViewHolder).date.text = ""
+            }else{
+                (holder as SenderViewHolder).date.visibility = View.VISIBLE
+                (holder as SenderViewHolder).date.text = previousMsg
+            }
+
+
 
             (holder as SenderViewHolder).senderTxt.setOnLongClickListener(object : View.OnLongClickListener{
                 override fun onLongClick(p0: View?): Boolean {
@@ -300,6 +319,7 @@ return MSG_REPLY_LEFT
 
     inner class SenderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val senderTxt : TextView = itemView.findViewById(R.id.sender_txt)
+        val date : TextView = itemView.findViewById(R.id.date)
 
 var pos = adapterPosition
 
