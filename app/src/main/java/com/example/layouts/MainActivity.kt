@@ -217,7 +217,7 @@ cancelBtn.setOnClickListener(object : View.OnClickListener{
                         val map = HashMap<String,Any>()
                         map.put("message",msg)
                         map.put("type","sender")
-                        map.put("dateFormat",dateformat)
+                        map.put("dateFormat",ServerValue.TIMESTAMP)
                         map.put("quotepos",quotePos)
                         map.put("quote",txtQuotedmsg.text.toString())
 
@@ -229,7 +229,7 @@ cancelBtn.setOnClickListener(object : View.OnClickListener{
                         val map = HashMap<String, Any>()
                         map.put("message", msg)
                         map.put("type", "sender")
-                        map.put("dateFormat",dateformat)
+                        map.put("dateFormat",ServerValue.TIMESTAMP)
                         FirebaseDatabase.getInstance().getReference().child("Chats").push()
                             .updateChildren(map)
                     }
@@ -258,7 +258,7 @@ cancelBtn.setOnClickListener(object : View.OnClickListener{
                         val map = HashMap<String,Any>()
                         map.put("message",msg)
                         map.put("type","receiver")
-                        map.put("dateFormat",dateformat)
+                        map.put("dateFormat",ServerValue.TIMESTAMP)
                         map.put("quotepos",quotePos)
                         map.put("quote",txtQuotedmsg.text.toString())
 
@@ -269,7 +269,7 @@ cancelBtn.setOnClickListener(object : View.OnClickListener{
                         val map = HashMap<String, Any>()
                         map.put("message", msg)
                         map.put("type", "receiver")
-                        map.put("dateFormat",dateformat)
+                        map.put("dateFormat",ServerValue.TIMESTAMP)
                        // FirebaseDatabase.getInstance().getReference().push().key!!
                         FirebaseDatabase.getInstance().getReference().child("Chats").push()
                             .updateChildren(map)

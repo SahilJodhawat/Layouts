@@ -109,9 +109,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
 
-    <stroke
-        android:width="0.5dp"
-        android:color="#090909"/>
+<!--    <stroke-->
+<!--        android:width="0.5dp"-->
+<!--        android:color="#090909"/>-->
 
     <size android:width="0dp"
         android:height="0dp" />

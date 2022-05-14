@@ -12,6 +12,17 @@
     android:layout_height="wrap_content"
     android:background="@drawable/right_tv_bg">
 
+    <TextView
+        android:id="@+id/date2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/reply"
+        android:gravity="center"
+        android:background="@drawable/date_background"
+        android:text="13,may"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/reply"
         android:layout_width="match_parent"

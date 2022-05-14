@@ -5,8 +5,9 @@ import android.content.BroadcastReceiver
  * EMAIL mohammadsajjad679@gmail.com
  */
 
-data class ChatModel(val dateFormat : String? = "",val message : String? = "",val type : String? = "",val quotepos : Int? = -1,
-                     val quote : String? = "")
+data class ChatModel(
+    var dateFormat : Long? = 0, var message : String? = "", var type : String? = "", var quotepos : Int? = -1,
+    var quote : String? = "")
 //{
 //var quotepos : Int = -1
 //    var quote : String = ""

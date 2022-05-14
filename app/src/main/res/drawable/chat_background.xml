@@ -116,9 +116,9 @@
     android:shape="rectangle">
 <size android:width="0dp"
     android:height="0dp" />
-<stroke
-    android:width="0.5dp"
-    android:color="@color/black"/>
+<!--<stroke-->
+<!--    android:width="0.5dp"-->
+<!--    android:color="@color/black"/>-->
 <solid android:color="#D5EEFF"/>
 
     <corners
