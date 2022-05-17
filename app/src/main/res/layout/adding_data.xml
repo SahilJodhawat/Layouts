@@ -21,8 +21,8 @@
 
 
         <androidx.constraintlayout.utils.widget.ImageFilterView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             app:roundPercent="1"
             android:layout_marginStart="40dp"
             android:background="#4C4B4B"
@@ -115,8 +115,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="580dp"
+        app:layout_constraintTop_toBottomOf="@id/chats_recycler_view"
         android:orientation="horizontal">
 
         <EditText
@@ -128,6 +127,7 @@
             android:padding="10dp"/>
 
         <ImageView
+            android:id="@+id/attachment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/attachment"
@@ -145,25 +145,25 @@
 
 
     </LinearLayout>
-    <Button
-        android:id="@+id/rvd_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="received"
-        android:textColor="@color/white"
-        android:backgroundTint="#E42323"
-        android:layout_marginStart="1dp"
-        app:layout_constraintTop_toBottomOf="@id/editor_layout"
-        app:layout_constraintStart_toStartOf="parent"/>
-    <Button
-        android:id="@+id/snd_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="send"
-        android:textColor="@color/black"
-        android:backgroundTint="#38E13F"
-        app:layout_constraintTop_toBottomOf="@id/editor_layout"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginLeft="320dp"/>
+<!--    <Button-->
+<!--        android:id="@+id/rvd_btn"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="received"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:backgroundTint="#E42323"-->
+<!--        android:layout_marginStart="1dp"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/editor_layout"-->
+<!--        app:layout_constraintStart_toStartOf="parent"/>-->
+<!--    <Button-->
+<!--        android:id="@+id/snd_btn"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="send"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:backgroundTint="#38E13F"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/editor_layout"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        android:layout_marginLeft="320dp"/>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
