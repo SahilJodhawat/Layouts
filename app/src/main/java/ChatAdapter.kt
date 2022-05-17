@@ -67,37 +67,59 @@ open class ChatAdapter( chatlist : ArrayList<ChatModel>) : RecyclerView.Adapter<
 
 
         if (chatList.get(holder.adapterPosition).type.equals("sender") && chatList.get(holder.adapterPosition).quotepos == -1) {
-
+            var cal1 = Calendar.getInstance()
+            var cal2 = Calendar.getInstance()
             (holder as SenderViewHolder).senderTxt.text =
                 chatList.get(holder.adapterPosition).message
-var previousMsg : Long? = 0
-            if (holder.adapterPosition != 0){
+            holder.senderMsgTime.text = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date(
+                chatList.get(holder.adapterPosition).dateFormat!!
+            ))
+var previousMsg : Long = 0
+            if (holder.adapterPosition > 1){
                 previousMsg = chatList.get(holder.adapterPosition - 1).dateFormat!!
             }
-            if (holder.adapterPosition == 0){
-                (holder as SenderViewHolder).date.visibility = View.VISIBLE
-                val date = SimpleDateFormat("dd-MM-yyyy hh:mm:ss a", Locale.ENGLISH).format(
+            if (previousMsg == 0L){
+                holder.date.visibility = View.VISIBLE
+                val date = SimpleDateFormat("dd-MMMM-yyyy hh:mm:ss a").format(
                     Date(chatList.get(holder.adapterPosition).dateFormat!!)
                 )
-                (holder as SenderViewHolder).date.text = date
-            }else{
-                val cal1 = Calendar.getInstance()
-                val cal2 = Calendar.getInstance()
-                cal1.timeInMillis = chatList.get(holder.adapterPosition).dateFormat!!
-                cal2.timeInMillis = previousMsg!!
+                (holder as SenderViewHolder).date.text = date.substring(0,6)
+                Log.d("date",date)
+            }
 
-                if (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH)){
+            else {
+
+                cal1.timeInMillis = chatList.get(holder.adapterPosition).dateFormat!!
+                cal2.timeInMillis = previousMsg
+
+                if (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(
+                        Calendar.DAY_OF_YEAR
+                    )
+                ) {
                     (holder as SenderViewHolder).date.visibility = View.GONE
                     (holder as SenderViewHolder).date.text = ""
+                    Log.d("cal1value",cal1.get(Calendar.YEAR).toString() + " " +cal2.get(Calendar.YEAR))
+                    Log.d("cal2value",cal2.get(Calendar.MONTH).toString() + " " +cal1.get(Calendar.MONTH))
 
-                }else{
+                } else {
                     (holder as SenderViewHolder).date.visibility = View.VISIBLE
-                    (holder as SenderViewHolder).date.text = SimpleDateFormat("dd-MM-yyyy hh:mm:ss a", Locale.ENGLISH)
-                        .format(Date(previousMsg))
+                    (holder as SenderViewHolder).date.text =
+                        SimpleDateFormat("dd-MMMM-yyyy hh:mm:ss a")
+                            .format(Date(chatList.get(holder.adapterPosition).dateFormat!!)).substring(0,6)
+//                    Log.d(
+//                        "prevDate", SimpleDateFormat("dd-MM-yyyy hh:mm:ss a")
+//                            .format(Date(previousMsg)).toString()
+                    //)
+
                 }
-
-
             }
+//            Log.d("cal1value",cal1.get(Calendar.YEAR).toString() + " " +cal2.get(Calendar.YEAR))
+//            Log.d("cal2value",cal2.get(Calendar.MONTH).toString() + " " +cal1.get(Calendar.MONTH))
+            Log.d(
+                "prevDate", SimpleDateFormat("dd:MM:yy hh:mm:ss a").format(Date(chatList.get(holder.adapterPosition).dateFormat!!))
+                    )
+
+
 
             (holder as SenderViewHolder).senderTxt.setOnLongClickListener(object : View.OnLongClickListener{
                 override fun onLongClick(p0: View?): Boolean {
@@ -153,31 +175,34 @@ var previousMsg : Long? = 0
         }else if(chatList.get(holder.adapterPosition).type.equals("receiver") && chatList.get(holder.adapterPosition).quotepos == -1){
             (holder as ReceiverViewHolder).receiverTxt.text =
                 chatList.get(holder.adapterPosition).message
+            holder.receiverMsgTime.text = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date(
+                chatList.get(holder.adapterPosition).dateFormat!!
+            ))
 
             var previousMsg : Long? = 0
             if (holder.adapterPosition != 0){
                 previousMsg = chatList.get(holder.adapterPosition - 1).dateFormat!!
             }
-            if (holder.adapterPosition == 0){
+            if (previousMsg == 0L){
                 (holder as ReceiverViewHolder).date1.visibility = View.VISIBLE
                 val date = SimpleDateFormat("dd-MM-yyyy hh:mm:ss a", Locale.ENGLISH).format(
                     Date(chatList.get(holder.adapterPosition).dateFormat!!)
                 )
-                (holder as SenderViewHolder).date.text = date
+                (holder as ReceiverViewHolder).date1.text = date
             }else{
                 val cal1 = Calendar.getInstance()
                 val cal2 = Calendar.getInstance()
                 cal1.timeInMillis = chatList.get(holder.adapterPosition).dateFormat!!
                 cal2.timeInMillis = previousMsg!!
 
-                if (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH)){
+                if (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)){
                     (holder as ReceiverViewHolder).date1.visibility = View.GONE
                     (holder as ReceiverViewHolder).date1.text = ""
 
                 }else{
                     (holder as ReceiverViewHolder).date1.visibility = View.VISIBLE
                     (holder as ReceiverViewHolder).date1.text = SimpleDateFormat("dd-MM-yyyy hh:mm:ss a", Locale.ENGLISH)
-                        .format(Date(previousMsg)).substring(0,10)
+                        .format(Date(chatList.get(holder.adapterPosition).dateFormat!!)).substring(0,10)
                 }
 
 
@@ -234,6 +259,8 @@ var previousMsg : Long? = 0
         if (chatList.get(holder.adapterPosition).quotepos != -1 && chatList.get(holder.adapterPosition).type.equals("sender")){
             (holder as SenderReplyViewHolder).QuotedTxt.text = chatList.get(position).quote
             (holder as SenderReplyViewHolder).sndReplyTxt.text = chatList.get(position).message
+            (holder as SenderReplyViewHolder).senderReplyMsgTime.text = SimpleDateFormat("hh:mm a",
+                Locale.getDefault()).format(Date(chatList.get(holder.adapterPosition).dateFormat!!))
             (holder as SenderReplyViewHolder).reply.setOnClickListener(object : View.OnClickListener{
                 override fun onClick(p0: View?) {
                     mQuoteClickListener!!.onQuoteClick(chatList.get(holder.adapterPosition).quotepos!!)
@@ -243,7 +270,7 @@ var previousMsg : Long? = 0
             })
 
             var previousMsg : Long? = 0
-            if (holder.adapterPosition != 0){
+            if (previousMsg == 0L){
                 previousMsg = chatList.get(holder.adapterPosition - 1).dateFormat!!
             }
             if (holder.adapterPosition == 0){
@@ -265,7 +292,7 @@ var previousMsg : Long? = 0
                 }else{
                     (holder as SenderReplyViewHolder).date2.visibility = View.VISIBLE
                     (holder as SenderReplyViewHolder).date2.text = SimpleDateFormat("dd-MM-yyyy hh:mm:ss a", Locale.ENGLISH)
-                        .format(Date(previousMsg))
+                        .format(Date(chatList.get(holder.adapterPosition).dateFormat!!))
                 }
 
 
@@ -325,7 +352,7 @@ var previousMsg : Long? = 0
             if (holder.adapterPosition != 0){
                 previousMsg = chatList.get(holder.adapterPosition - 1).dateFormat!!
             }
-            if (holder.adapterPosition == 0){
+            if (previousMsg == 0L){
                 (holder as ReceiverReplyViewHolder).date3.visibility = View.VISIBLE
                 val date = SimpleDateFormat("dd-MM-yyyy hh:mm:ss a", Locale.ENGLISH).format(
                     Date(chatList.get(holder.adapterPosition).dateFormat!!)
@@ -344,7 +371,7 @@ var previousMsg : Long? = 0
                 }else{
                     (holder as ReceiverReplyViewHolder).date3.visibility = View.VISIBLE
                     (holder as ReceiverReplyViewHolder).date3.text = SimpleDateFormat("dd-MM-yyyy hh:mm:ss a", Locale.ENGLISH)
-                        .format(Date(previousMsg))
+                        .format(chatList.get(holder.adapterPosition).dateFormat!!)
                 }
 
 
@@ -431,6 +458,7 @@ var previousMsg : Long? = 0
     inner class SenderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val senderTxt : TextView = itemView.findViewById(R.id.sender_txt)
         val date : TextView = itemView.findViewById(R.id.date)
+        val senderMsgTime : TextView = itemView.findViewById(R.id.sender_msg_time)
 
 
 var pos = adapterPosition
@@ -439,6 +467,7 @@ var pos = adapterPosition
     inner class ReceiverViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val receiverTxt : TextView = itemView.findViewById(R.id.receiver_txt)
         val date1 : TextView = itemView.findViewById(R.id.date1)
+        val receiverMsgTime : TextView = itemView.findViewById(R.id.receiver_msg_time)
     }
 
     inner class SenderReplyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
@@ -446,6 +475,7 @@ val sndReplyTxt : TextView = itemView.findViewById(R.id.txtBody)
         val QuotedTxt : TextView = itemView.findViewById(R.id.textQuote)
         val reply : ConstraintLayout = itemView.findViewById(R.id.reply)
         val date2 : TextView = itemView.findViewById(R.id.date2)
+        val senderReplyMsgTime : TextView = itemView.findViewById(R.id.sender_reply_msg_time)
     }
 
     inner class ReceiverReplyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){

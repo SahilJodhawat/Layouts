@@ -3,16 +3,24 @@ package com.example.layouts
 
 import ChatAdapter
 import ChatModel
+import android.content.ContentProvider
+import android.content.ContentResolver
 import android.content.Context
+import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -58,6 +66,8 @@ var first = true
     lateinit var replyLayout : ConstraintLayout
     lateinit var rcvdBtn : Button
     lateinit var cancelBtn : ImageButton
+    lateinit var attachment : ImageView
+    lateinit var dialog: AlertDialog
     var quotePos : Int = 0
 
 
@@ -85,16 +95,48 @@ var first = true
 //        val e = SimpleDateFormat("d,MMM").format(cal.time)
 //Log.d("month",e)
          chatEdt = findViewById(R.id.ent_msg)
-        chatBtn = findViewById(R.id.snd_btn)
-         rcvdBtn = findViewById(R.id.rvd_btn)
+//        chatBtn = findViewById(R.id.snd_btn)
+//         rcvdBtn = findViewById(R.id.rvd_btn)
          chtPrgsBar = findViewById(R.id.chat_prgs_bar)
          txtQuotedmsg = findViewById(R.id.txtQuotedMsg)
          replyLayout = findViewById(R.id.reply_layout)
         cancelBtn = findViewById(R.id.cancelButton)
+        attachment = findViewById(R.id.attachment)
         chatRecyclerView.layoutManager = manager
       //  manager.reverseLayout = true
 supportActionBar!!.hide()
 
+attachment.setOnClickListener(object : View.OnClickListener{
+    override fun onClick(p0: View?) {
+        val builder = AlertDialog.Builder(this@MainActivity)
+        val view : View = LayoutInflater.from(p0!!.context).inflate(R.layout.custom_attachment_dialog,null)
+        builder.setView(view)
+val selectImg : TextView = view.findViewById(R.id.image_selector)
+val openImg : TextView = view.findViewById(R.id.open_camera)
+        selectImg.setOnClickListener(object : View.OnClickListener{
+            override fun onClick(p0: View?) {
+                val galleryIntent = Intent(Intent.ACTION_PICK)
+                galleryIntent.setType("image/*")
+                startActivityForResult(galleryIntent,300)
+
+            }
+
+        })
+        openImg.setOnClickListener(object : View.OnClickListener{
+            override fun onClick(p0: View?) {
+                val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                startActivityForResult(cameraIntent,200)
+            }
+
+        })
+
+        dialog = builder.create()
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
+
+    }
+
+})
 
 
             val query = FirebaseDatabase.getInstance().getReference().child("Chats").limitToLast(totalCount).orderByKey()
@@ -106,6 +148,7 @@ supportActionBar!!.hide()
 
 
     chatList.add(model)
+
 
 adapter.notifyItemChanged(chatList.indexOf(model))
 Log.d("modelCount",snapshot.childrenCount.toString())
@@ -204,85 +247,85 @@ cancelBtn.setOnClickListener(object : View.OnClickListener{
         chatEdt.text.clear()
 
 
-        chatBtn.setOnClickListener(object : View.OnClickListener {
-
-            override fun onClick(p0: View?) {
-                var s = System.currentTimeMillis()
-                dateformat = SimpleDateFormat("d,MMM,y,hh:mm:ss a", Locale.ENGLISH).format(s)
-                if (!chatEdt.text.isEmpty()){
-                    if (replyLayout.visibility == VISIBLE){
-                        replyLayout.visibility = GONE
-
-                        val msg : String = chatEdt.text.toString()
-                        val map = HashMap<String,Any>()
-                        map.put("message",msg)
-                        map.put("type","sender")
-                        map.put("dateFormat",ServerValue.TIMESTAMP)
-                        map.put("quotepos",quotePos)
-                        map.put("quote",txtQuotedmsg.text.toString())
-
-
-                        FirebaseDatabase.getInstance().getReference().child("Chats").push()
-                            .updateChildren(map)
-                    }else{
-                        val msg: String = chatEdt.text.toString()
-                        val map = HashMap<String, Any>()
-                        map.put("message", msg)
-                        map.put("type", "sender")
-                        map.put("dateFormat",ServerValue.TIMESTAMP)
-                        FirebaseDatabase.getInstance().getReference().child("Chats").push()
-                            .updateChildren(map)
-                    }
-
-
-                }else{
-                    Toast.makeText(this@MainActivity,"Please enter Message",Toast.LENGTH_SHORT).show()
-                }
-                chatEdt.text.clear()
-
-
-            }
-
-        })
-
-
-
-        rcvdBtn.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(p0: View?) {
-                var s = System.currentTimeMillis()
-                dateformat = SimpleDateFormat("d,MMM,y,hh:mm:ss a", Locale.ENGLISH).format(s)
-                if (!chatEdt.text.isEmpty()){
-                    if (replyLayout.visibility == VISIBLE){
-                        replyLayout.visibility = GONE
-                        val msg : String = chatEdt.text.toString()
-                        val map = HashMap<String,Any>()
-                        map.put("message",msg)
-                        map.put("type","receiver")
-                        map.put("dateFormat",ServerValue.TIMESTAMP)
-                        map.put("quotepos",quotePos)
-                        map.put("quote",txtQuotedmsg.text.toString())
-
-                        FirebaseDatabase.getInstance().getReference().child("Chats").push()
-                            .updateChildren(map)
-                    }else{
-                        val msg: String = chatEdt.text.toString()
-                        val map = HashMap<String, Any>()
-                        map.put("message", msg)
-                        map.put("type", "receiver")
-                        map.put("dateFormat",ServerValue.TIMESTAMP)
-                       // FirebaseDatabase.getInstance().getReference().push().key!!
-                        FirebaseDatabase.getInstance().getReference().child("Chats").push()
-                            .updateChildren(map)
-                    }
+//        chatBtn.setOnClickListener(object : View.OnClickListener {
+//
+//            override fun onClick(p0: View?) {
+//                var s = System.currentTimeMillis()
+//                dateformat = SimpleDateFormat("d,MMM,y,hh:mm:ss a", Locale.ENGLISH).format(s)
+//                if (!chatEdt.text.isEmpty()){
+//                    if (replyLayout.visibility == VISIBLE){
+//                        replyLayout.visibility = GONE
+//
+//                        val msg : String = chatEdt.text.toString()
+//                        val map = HashMap<String,Any>()
+//                        map.put("message",msg)
+//                        map.put("type","sender")
+//                        map.put("dateFormat",ServerValue.TIMESTAMP)
+//                        map.put("quotepos",quotePos)
+//                        map.put("quote",txtQuotedmsg.text.toString())
+//
+//
+//                        FirebaseDatabase.getInstance().getReference().child("Chats").push()
+//                            .updateChildren(map)
+//                    }else{
+//                        val msg: String = chatEdt.text.toString()
+//                        val map = HashMap<String, Any>()
+//                        map.put("message", msg)
+//                        map.put("type", "sender")
+//                        map.put("dateFormat",ServerValue.TIMESTAMP)
+//                        FirebaseDatabase.getInstance().getReference().child("Chats").push()
+//                            .updateChildren(map)
+//                    }
+//
+//
+//                }else{
+//                    Toast.makeText(this@MainActivity,"Please enter Message",Toast.LENGTH_SHORT).show()
+//                }
+//                chatEdt.text.clear()
+//
+//
+//            }
+//
+//        })
 
 
-                }else{
-                    Toast.makeText(this@MainActivity,"Please enter Message",Toast.LENGTH_SHORT).show()
-                }
-                chatEdt.text.clear()
 
-            }
-        })
+//        rcvdBtn.setOnClickListener(object : View.OnClickListener {
+//            override fun onClick(p0: View?) {
+//                var s = System.currentTimeMillis()
+//                dateformat = SimpleDateFormat("d,MMM,y,hh:mm:ss a", Locale.ENGLISH).format(s)
+//                if (!chatEdt.text.isEmpty()){
+//                    if (replyLayout.visibility == VISIBLE){
+//                        replyLayout.visibility = GONE
+//                        val msg : String = chatEdt.text.toString()
+//                        val map = HashMap<String,Any>()
+//                        map.put("message",msg)
+//                        map.put("type","receiver")
+//                        map.put("dateFormat",ServerValue.TIMESTAMP)
+//                        map.put("quotepos",quotePos)
+//                        map.put("quote",txtQuotedmsg.text.toString())
+//
+//                        FirebaseDatabase.getInstance().getReference().child("Chats").push()
+//                            .updateChildren(map)
+//                    }else{
+//                        val msg: String = chatEdt.text.toString()
+//                        val map = HashMap<String, Any>()
+//                        map.put("message", msg)
+//                        map.put("type", "receiver")
+//                        map.put("dateFormat",ServerValue.TIMESTAMP)
+//                       // FirebaseDatabase.getInstance().getReference().push().key!!
+//                        FirebaseDatabase.getInstance().getReference().child("Chats").push()
+//                            .updateChildren(map)
+//                    }
+//
+//
+//                }else{
+//                    Toast.makeText(this@MainActivity,"Please enter Message",Toast.LENGTH_SHORT).show()
+//                }
+//                chatEdt.text.clear()
+//
+//            }
+//        })
 
 chatRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
     override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -296,6 +339,9 @@ chatRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
         scrolledItem = manager.findFirstVisibleItemPosition()
         totalItem = manager.itemCount
         currentPage++
+        if (totalItem<25){
+            chtPrgsBar.visibility = View.GONE
+        }
         if (isScrolling && ( scrolledItem == 0) && !endResult ){
 
             isScrolling = false
