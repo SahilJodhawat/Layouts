@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +17,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.squareup.picasso.Picasso
 import okhttp3.internal.Util
 import org.w3c.dom.Text
 import java.text.SimpleDateFormat
@@ -32,12 +34,11 @@ import java.text.DateFormat
  */
 
 open class ChatAdapter( chatlist : ArrayList<ChatModel>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val DATE_MSG: Int = 4
     val MSG_RIGHT = 0
     val MSG_LEFT = 1
     val MSG_REPLY_RIGHT = 2
     val MSG_REPLY_LEFT = 3
-    var key : String = ""
+   val IMG_MSG = 4
 
     var chatList : ArrayList<ChatModel> = chatlist
     interface QuoteClickListener {
@@ -57,16 +58,26 @@ open class ChatAdapter( chatlist : ArrayList<ChatModel>) : RecyclerView.Adapter<
    }else if (viewType == MSG_REPLY_RIGHT){
        return SenderReplyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.sender_reply,parent,false))
    }
+        if (viewType == IMG_MSG){
+            return SenderImgViewHolder(LayoutInflater.from(parent.context).inflate(
+                R.layout.send_image_layout,parent,false)
+            )
+
+        }
         if (viewType == MSG_LEFT){
             return ReceiverViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.receiver_chat,parent,false))
         }
         return ReceiverReplyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.receiver_reply,parent,false))
+
+
     }
+
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
 
-        if (chatList.get(holder.adapterPosition).type.equals("sender") && chatList.get(holder.adapterPosition).quotepos == -1) {
+        if (chatList.get(holder.adapterPosition).type.equals("sender")
+            && chatList.get(holder.adapterPosition).quotepos == -1) {
             var cal1 = Calendar.getInstance()
             var cal2 = Calendar.getInstance()
             (holder as SenderViewHolder).senderTxt.text =
@@ -432,6 +443,12 @@ var previousMsg : Long = 0
 
             })
         }
+        if (chatList.get(holder.adapterPosition).mediaType.equals("image") &&
+                chatList.get(holder.adapterPosition).type.equals("senderImage")){
+            Picasso.get().load(chatList.get(holder.adapterPosition).message).into((holder as SenderImgViewHolder).senderImg)
+        }
+
+
     }
 
     override fun getItemCount(): Int {
@@ -445,13 +462,15 @@ var previousMsg : Long = 0
             return MSG_REPLY_RIGHT
         }
 
-          if (chatList.get(position).type.equals("receiver") && chatList.get(position).quotepos == -1){
-              return MSG_LEFT
-          }else {
-              return MSG_REPLY_LEFT
-          }
 
-
+         if (chatList.get(position).type.equals("receiver") && chatList.get(position).quotepos == -1){
+           return MSG_LEFT
+        }else if (chatList.get(position).type.equals("receiver") && chatList.get(position).quotepos != -1) {
+           return MSG_REPLY_LEFT
+        }
+        else{
+            return IMG_MSG
+         }
 
     }
 
@@ -484,6 +503,9 @@ val sndReplyTxt : TextView = itemView.findViewById(R.id.txtBody)
         val reply1 : ConstraintLayout = itemView.findViewById(R.id.reply1)
         val date3 : TextView = itemView.findViewById(R.id.date3)
     }
+  inner class SenderImgViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+      val senderImg : ImageView = itemView.findViewById(R.id.sender_img)
+  }
 
 
     fun addMoreItems(newItems : ArrayList<ChatModel>){
@@ -494,6 +516,8 @@ val sndReplyTxt : TextView = itemView.findViewById(R.id.txtBody)
     }
 
 }
+
+
 
 
 

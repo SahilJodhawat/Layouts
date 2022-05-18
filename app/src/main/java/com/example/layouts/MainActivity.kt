@@ -1,14 +1,14 @@
 package com.example.layouts
 
 
-import ChatAdapter
-import ChatModel
 import android.content.ContentProvider
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -30,16 +30,32 @@ import androidx.recyclerview.widget.RecyclerView
 //import com.example.layouts.databinding.MyPostsBinding
 //import com.example.layouts.databinding.RecyclerViewBinding
 import com.example.layouts.viewmodel.MainViewModel
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
+import java.io.ByteArrayOutputStream
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
+import android.content.ContentValues
+
+import ChatModel
+
+import ChatAdapter
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import java.util.jar.Manifest
 
 
 class MainActivity : AppCompatActivity(),ChatAdapter.QuoteClickListener{
+    private val CAMERA_PERMISSION_REQUEST_CODE: Int = 400
+    private val STORAGE_PERMISSION_REQUEST_CODE : Int = 500
     private lateinit var mainViewModel: MainViewModel
 
     //    lateinit var myPostsBinding: MyPostsBinding
@@ -69,6 +85,8 @@ var first = true
     lateinit var attachment : ImageView
     lateinit var dialog: AlertDialog
     var quotePos : Int = 0
+    lateinit var imgeuri : Uri
+    lateinit var downloadUri : Uri
 
 
     val manager = LinearLayoutManager(this)
@@ -106,6 +124,7 @@ var first = true
       //  manager.reverseLayout = true
 supportActionBar!!.hide()
 
+
 attachment.setOnClickListener(object : View.OnClickListener{
     override fun onClick(p0: View?) {
         val builder = AlertDialog.Builder(this@MainActivity)
@@ -124,8 +143,23 @@ val openImg : TextView = view.findViewById(R.id.open_camera)
         })
         openImg.setOnClickListener(object : View.OnClickListener{
             override fun onClick(p0: View?) {
-                val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                startActivityForResult(cameraIntent,200)
+                if (!checkCameraPermission()) {
+                    requestCameraPermission()
+                }else if (!checkStoragePermission()) {
+                    requestStoragePermission()
+
+                } else {
+                    val contentValues = ContentValues()
+                    contentValues.put(MediaStore.Images.Media.TITLE,"Temp_pic")
+                    contentValues.put(MediaStore.Images.Media.DESCRIPTION, "Temp Description")
+                    imgeuri = getContentResolver().insert(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        contentValues
+                    )!!
+                    val camraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                    camraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imgeuri)
+                    startActivityForResult(camraIntent, 200)
+                }
             }
 
         })
@@ -554,6 +588,106 @@ chatList.addAll(0,tempChatList)
 //        recyclerViewBinding.shimmerLayout.stopShimmer()
 //
 //    }
+
+    }
+    fun checkStoragePermission() : Boolean{
+        if (ContextCompat.checkSelfPermission(this,android.Manifest.permission
+                .WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            return false
+        }
+        return true
+    }
+    fun checkCameraPermission(): Boolean {
+        if (ContextCompat.checkSelfPermission(this,android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+            ){
+            return false
+        }
+        return true
+    }
+
+    fun requestCameraPermission(){
+        ActivityCompat.requestPermissions(this,
+            arrayOf(android.Manifest.permission.CAMERA),CAMERA_PERMISSION_REQUEST_CODE)
+
+
+    }
+    fun requestStoragePermission(){
+        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            ,STORAGE_PERMISSION_REQUEST_CODE)
+
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        when(requestCode){
+            CAMERA_PERMISSION_REQUEST_CODE ->
+                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    Toast.makeText(this,"permission granted",Toast.LENGTH_SHORT).show()
+                }else{
+                    Toast.makeText(this,"permission denied",Toast.LENGTH_SHORT).show()
+                }
+            STORAGE_PERMISSION_REQUEST_CODE ->
+                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    Toast.makeText(this,"permission granted",Toast.LENGTH_SHORT).show()
+
+                }else{
+                    Toast.makeText(this,"permission denied",Toast.LENGTH_SHORT).show()
+
+                }
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK){
+            if (requestCode == 300){
+                imgeuri = data!!.data!!
+                sendImageMessage(imgeuri)
+            }
+            if (resultCode == 200){
+                imgeuri = data!!.data!!
+                sendImageMessage(imgeuri)
+
+            }
+        }
+
+    }
+    fun sendImageMessage(imageuri : Uri){
+
+        val timestamp = "" + System.currentTimeMillis()
+        val filepath : String = "ChatImages/post$timestamp"
+        val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver,imageuri)
+        val arrayOutputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG,100,arrayOutputStream)
+        val imageData = arrayOutputStream.toByteArray()
+
+        val storageRef = FirebaseStorage.getInstance().getReference().child(filepath)
+        storageRef.putBytes(imageData).addOnSuccessListener {
+            dialog.dismiss()
+            Log.d("successMsg",it.toString())
+            val uriTask = it.storage.downloadUrl
+            while (!uriTask.isSuccessful){
+                if (uriTask.isComplete){
+                   val downloadUri = uriTask.result.toString()
+                   if (uriTask.isSuccessful) {
+                       val dbRef = FirebaseDatabase.getInstance().getReference().child("Chats")
+                       val hashMap = HashMap<String, Any>()
+                       hashMap.put("message", downloadUri)
+                       hashMap.put("mediaType", "image")
+                       hashMap.put("type", "senderImage")
+                       hashMap.put("dateFormat", ServerValue.TIMESTAMP)
+                       dbRef.push().setValue(hashMap)
+                   }
+               }
+            }
+        }
+
+
 
     }
     fun showMessgae(chatModel: ChatModel){

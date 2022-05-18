@@ -6,7 +6,7 @@ import android.content.BroadcastReceiver
  */
 
 data class ChatModel(
-    var dateFormat : Long? = 0, var message : String? = "", var type : String? = "", var quotepos : Int? = -1,
+    var dateFormat : Long? = 0,var mediaType : String? = "", var message : String? = "", var type : String? = "", var quotepos : Int? = -1,
     var quote : String? = "")
 //{
 //var quotepos : Int = -1
