@@ -1,15 +1,12 @@
 package com.example.layouts
 
 
-import android.content.ContentProvider
-import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -19,7 +16,6 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -30,15 +26,9 @@ import androidx.recyclerview.widget.RecyclerView
 //import com.example.layouts.databinding.MyPostsBinding
 //import com.example.layouts.databinding.RecyclerViewBinding
 import com.example.layouts.viewmodel.MainViewModel
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.UploadTask
-import com.squareup.picasso.Picasso
 import java.io.ByteArrayOutputStream
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -48,9 +38,10 @@ import ChatModel
 
 import ChatAdapter
 import android.content.pm.PackageManager
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import java.util.jar.Manifest
 
 
 class MainActivity : AppCompatActivity(),ChatAdapter.QuoteClickListener{
@@ -83,9 +74,10 @@ var first = true
     lateinit var rcvdBtn : Button
     lateinit var cancelBtn : ImageButton
     lateinit var attachment : ImageView
+    lateinit var sendChat : ImageView
     lateinit var dialog: AlertDialog
     var quotePos : Int = 0
-    lateinit var imgeuri : Uri
+    lateinit var imageuri : Uri
     lateinit var downloadUri : Uri
 
 
@@ -120,9 +112,27 @@ var first = true
          replyLayout = findViewById(R.id.reply_layout)
         cancelBtn = findViewById(R.id.cancelButton)
         attachment = findViewById(R.id.attachment)
+        sendChat = findViewById(R.id.send_chat_img)
         chatRecyclerView.layoutManager = manager
       //  manager.reverseLayout = true
 supportActionBar!!.hide()
+chatEdt.addTextChangedListener(object  : TextWatcher{
+    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+    }
+
+    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+if (p0!!.length == 0){
+    sendChat.setImageDrawable(resources.getDrawable(R.drawable.microphone!!))
+}else{
+    sendChat.setImageDrawable(resources.getDrawable(R.drawable.send_message!!))
+}
+    }
+
+    override fun afterTextChanged(p0: Editable?) {
+
+    }
+})
 
 
 attachment.setOnClickListener(object : View.OnClickListener{
@@ -143,22 +153,21 @@ val openImg : TextView = view.findViewById(R.id.open_camera)
         })
         openImg.setOnClickListener(object : View.OnClickListener{
             override fun onClick(p0: View?) {
-                if (!checkCameraPermission()) {
+                if (!checkCameraPermission() && !checkStoragePermission()) {
                     requestCameraPermission()
-                }else if (!checkStoragePermission()) {
                     requestStoragePermission()
-
                 } else {
                     val contentValues = ContentValues()
                     contentValues.put(MediaStore.Images.Media.TITLE,"Temp_pic")
                     contentValues.put(MediaStore.Images.Media.DESCRIPTION, "Temp Description")
-                    imgeuri = getContentResolver().insert(
+                    imageuri = getContentResolver().insert(
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                         contentValues
                     )!!
-                    val camraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                    camraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imgeuri)
-                    startActivityForResult(camraIntent, 200)
+                    val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageuri)
+                    startActivityForResult(cameraIntent, 200)
+                    Log.d("imgUri",imageuri.toString())
                 }
             }
 
@@ -275,7 +284,7 @@ cancelBtn.setOnClickListener(object : View.OnClickListener{
     }
 
 })
-        adapter = ChatAdapter(chatList)
+        adapter = ChatAdapter(this,chatList)
         chatRecyclerView.adapter = adapter
         Log.d("kk",chatList.size.toString())
         chatEdt.text.clear()
@@ -646,13 +655,13 @@ chatList.addAll(0,tempChatList)
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK){
             if (requestCode == 300){
-                imgeuri = data!!.data!!
-                sendImageMessage(imgeuri)
+                imageuri = data!!.data!!
+                sendImageMessage(imageuri)
+                 Log.d("imgUri",imageuri.toString())
             }
-            if (resultCode == 200){
-                imgeuri = data!!.data!!
-                sendImageMessage(imgeuri)
-
+             if (requestCode == 200){
+                sendImageMessage(imageuri)
+                Log.d("imgUri1",imageuri.toString())
             }
         }
 
@@ -674,6 +683,7 @@ chatList.addAll(0,tempChatList)
             while (!uriTask.isSuccessful){
                 if (uriTask.isComplete){
                    val downloadUri = uriTask.result.toString()
+                    Log.d("downloadUri",downloadUri)
                    if (uriTask.isSuccessful) {
                        val dbRef = FirebaseDatabase.getInstance().getReference().child("Chats")
                        val hashMap = HashMap<String, Any>()

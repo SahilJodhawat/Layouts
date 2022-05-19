@@ -4,9 +4,26 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <TextView
+        android:id="@+id/snd_img_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/sender_img"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:textSize="9dp"
+        android:padding="8dp"
+        android:textColor="@color/white"
+        android:background="@drawable/date_background"
+        android:text="13,may"/>
+
     <ImageView
         android:id="@+id/sender_img"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -14,7 +31,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@drawable/chat_background"
+        android:background="@drawable/sender_chat_background"
         android:src="@drawable/academy"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

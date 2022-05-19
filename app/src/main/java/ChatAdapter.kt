@@ -1,17 +1,29 @@
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
+import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.provider.CalendarContract
 import android.text.TextUtils
 import android.text.format.DateFormat.format
 import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.RoundedCorner
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.example.layouts.R
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -33,7 +45,7 @@ import java.text.DateFormat
  * EMAIL mohammadsajjad679@gmail.com
  */
 
-open class ChatAdapter( chatlist : ArrayList<ChatModel>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+open class ChatAdapter(val context : Context, chatlist : ArrayList<ChatModel>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val MSG_RIGHT = 0
     val MSG_LEFT = 1
     val MSG_REPLY_RIGHT = 2
@@ -445,7 +457,39 @@ var previousMsg : Long = 0
         }
         if (chatList.get(holder.adapterPosition).mediaType.equals("image") &&
                 chatList.get(holder.adapterPosition).type.equals("senderImage")){
-            Picasso.get().load(chatList.get(holder.adapterPosition).message).into((holder as SenderImgViewHolder).senderImg)
+            Glide.with(context).load(Uri.parse(chatList.get(holder.adapterPosition).message)).override(540,540)
+                .transform(RoundedCorners(24)).into((holder as SenderImgViewHolder).senderImg)
+
+            var previousMsg : Long? = 0
+            if (holder.adapterPosition != 0){
+                previousMsg = chatList.get(holder.adapterPosition - 1).dateFormat!!
+            }
+            if (previousMsg == 0L){
+                (holder as SenderImgViewHolder).sndImgDate.visibility = View.VISIBLE
+                val date = SimpleDateFormat("dd-MMMM-yyyy hh:mm:ss a", Locale.ENGLISH).format(
+                    Date(chatList.get(holder.adapterPosition).dateFormat!!)
+                )
+                (holder as SenderImgViewHolder).sndImgDate.text = date
+            }else{
+                val cal1 = Calendar.getInstance()
+                val cal2 = Calendar.getInstance()
+                cal1.timeInMillis = chatList.get(holder.adapterPosition).dateFormat!!
+                cal2.timeInMillis = previousMsg!!
+
+                if (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)){
+                    (holder as SenderImgViewHolder).sndImgDate.visibility = View.GONE
+                    (holder as SenderImgViewHolder).sndImgDate.text = ""
+
+                }else{
+                    (holder as SenderImgViewHolder).sndImgDate.visibility = View.VISIBLE
+                    (holder as SenderImgViewHolder).sndImgDate.text = SimpleDateFormat("dd-MMMM-yyyy hh:mm:ss a", Locale.ENGLISH)
+                        .format(Date(chatList.get(holder.adapterPosition).dateFormat!!)).substring(0,6)
+                }
+
+
+            }
+
+
         }
 
 
@@ -505,6 +549,7 @@ val sndReplyTxt : TextView = itemView.findViewById(R.id.txtBody)
     }
   inner class SenderImgViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
       val senderImg : ImageView = itemView.findViewById(R.id.sender_img)
+      val sndImgDate : TextView = itemView.findViewById(R.id.snd_img_date)
   }
 
 
