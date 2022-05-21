@@ -4,23 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraintLayout1"
     android:layout_width="match_parent"
-    android:padding="8dp"
+    android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
     android:layout_marginTop="4dp"
     android:layout_marginEnd="220dp"
     android:layout_marginBottom="4dp"
-    android:layout_height="wrap_content"
-    android:background="@drawable/left_tv_bg">
+    android:background="@drawable/left_tv_bg"
+    android:padding="8dp">
+
     <TextView
         android:id="@+id/date3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/reply1"
-        android:gravity="center"
         android:background="@drawable/date_background"
-        android:text="13,may"/>
+        android:gravity="center"
+        android:text="13,may"
+        app:layout_constraintBottom_toTopOf="@id/reply1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/reply1"
@@ -42,10 +43,10 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
-            android:id="@+id/name"
             android:text="Sender"
             app:layout_constraintStart_toStartOf="@+id/image_line"
             app:layout_constraintTop_toTopOf="parent" />
@@ -86,29 +87,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        app:layout_constraintTop_toBottomOf="@id/reply1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="42dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/poppins"
         android:text="12:17"
         android:textColor="#999999"
         android:textSize="12dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="42dp"
-        android:layout_marginEnd="20dp"
-        android:fontFamily="@font/poppins"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reply1" />
 
     <TextView
         android:id="@+id/receiver_reply_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/reply1"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="32dp"
+        android:text="Receiver"
         android:textColor="#1D9DF3"
         android:textSize="12dp"
-        android:text="Receiver"
-        android:layout_marginTop="32dp"
-        android:layout_marginStart="7dp"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reply1" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
