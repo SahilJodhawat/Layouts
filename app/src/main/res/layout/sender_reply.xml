@@ -9,8 +9,8 @@
     android:layout_marginTop="4dp"
     android:layout_marginEnd="8dp"
     android:layout_marginBottom="4dp"
-    android:background="@drawable/right_tv_bg"
-    android:padding="8dp">
+    android:padding="3dp"
+    android:background="@drawable/right_tv_bg">
 
     <TextView
         android:id="@+id/date2"
@@ -23,33 +23,46 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/reply"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:animateLayoutChanges="true"
-        android:background="@drawable/my_border"
-        android:paddingStart="4dp"
-        android:paddingTop="8dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/layout_border"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <View
             android:id="@+id/image_line"
             android:layout_width="5dp"
-            android:layout_height="match_parent"
-            android:background="#732D77"
+            android:layout_height="70dp"
+            android:background="@drawable/view_border"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
+            app:layout_constraintTop_toTopOf="parent"/>
         <TextView
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
+            android:textStyle="bold"
             android:text="Receiver"
-            app:layout_constraintStart_toStartOf="@+id/image_line"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/quoted_img"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="1dp"
+            android:layout_marginRight="4dp"/>
+
 
         <TextView
             android:id="@+id/textQuote"
@@ -57,16 +70,19 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="3"
-            android:padding="8dp"
+            android:padding="5dp"
             android:textColor="#1A1616"
             android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/image_line"
+            android:layout_marginLeft="3dp"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name"
             tools:text="h ghgdhg fgd \n h ghgdhg fgd h ghgdhg fgdn h ghgdhg fgd h ghgdhg fgdn h ghgdhg fgd h ghgdhg fgdn h ghgdhg fgd h ghgdhg fgdn h ghgdhg" />
 
 
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <TextView
         android:id="@+id/txtBody"
@@ -83,6 +99,7 @@
         tools:text="@tools:sample/last_names" />
 
     <ImageView
+        android:id="@+id/seen_tick"
         android:layout_width="15dp"
         android:layout_height="15dp"
         android:layout_marginEnd="10dp"

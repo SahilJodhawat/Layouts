@@ -305,17 +305,32 @@ class MainActivity : AppCompatActivity(), ChatAdapter.QuoteClickListener {
                 if (!chatEdt.text.isEmpty()) {
                     if (replyLayout.visibility == VISIBLE) {
                         replyLayout.visibility = GONE
+                        if (chatList.get(quotePos).type.equals("senderImage")){
+                            val msg: String = chatEdt.text.toString()
+                            val map = HashMap<String, Any>()
+                            map.put("message", msg)
+                            map.put("type", "sender")
+                            map.put("mediaType","image")
+                            map.put("dateFormat", ServerValue.TIMESTAMP)
+                            map.put("quotepos", quotePos)
+                            map.put("quote", txtQuotedmsg.text.toString())
+                            Log.d("quoteImg",chatList.get(quotePos).type.toString())
 
-                        val msg: String = chatEdt.text.toString()
-                        val map = HashMap<String, Any>()
-                        map.put("message", msg)
-                        map.put("type", "sender")
-                        map.put("dateFormat", ServerValue.TIMESTAMP)
-                        map.put("quotepos", quotePos)
-                        map.put("quote", txtQuotedmsg.text.toString())
+                            FirebaseDatabase.getInstance().getReference().child("Chats").push()
+                                .updateChildren(map)
+                        }else {
+                            val msg: String = chatEdt.text.toString()
+                            val map = HashMap<String, Any>()
+                            map.put("message", msg)
+                            map.put("type", "sender")
+                            map.put("dateFormat", ServerValue.TIMESTAMP)
+                            map.put("quotepos", quotePos)
+                            map.put("quote", txtQuotedmsg.text.toString())
+                            Log.d("quoteImg1", chatList.get(quotePos).type.toString())
 
-                        FirebaseDatabase.getInstance().getReference().child("Chats").push()
-                            .updateChildren(map)
+                            FirebaseDatabase.getInstance().getReference().child("Chats").push()
+                                .updateChildren(map)
+                        }
                     } else {
                         val msg: String = chatEdt.text.toString()
                         val map = HashMap<String, Any>()
@@ -763,8 +778,9 @@ class MainActivity : AppCompatActivity(), ChatAdapter.QuoteClickListener {
         inputMethodManager.showSoftInput(chatEdt, InputMethodManager.SHOW_IMPLICIT)
         if (chatModel.type.equals("senderImage")) {
             imgQuotedMsg.visibility = VISIBLE
-            Glide.with(this).load(Uri.parse(chatModel.message)).override(500, 150)
+            Glide.with(this).load(Uri.parse(chatModel.message)).override(600, 150)
                 .into(imgQuotedMsg)
+            txtQuotedmsg.text = chatModel.message
             txtQuotedmsg.visibility = GONE
         } else {
             txtQuotedmsg.visibility = VISIBLE

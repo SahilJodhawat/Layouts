@@ -32,6 +32,7 @@ import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
 import okhttp3.internal.Util
 import org.w3c.dom.Text
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -362,8 +363,22 @@ open class ChatAdapter(val context: Context, chatlist: ArrayList<ChatModel>) :
                 "sender"
             )
         ) {
-            (holder as SenderReplyViewHolder).QuotedTxt.text = chatList.get(position).quote
-            (holder as SenderReplyViewHolder).sndReplyTxt.text = chatList.get(position).message
+
+
+            if (chatList.get(holder.adapterPosition).mediaType.equals("image")){
+                Glide.with(context).load(Uri.parse(chatList.get(holder.adapterPosition).quote)).override(400,150)
+                    .into((holder as SenderReplyViewHolder).quotedImgSndr)
+                holder.sndReplyTxt.text = chatList.get(position).message
+                holder.name.text = chatList.get(holder.adapterPosition).type
+                holder.QuotedTxt.visibility = View.GONE
+            }else{
+                (holder as SenderReplyViewHolder).QuotedTxt.visibility = View.VISIBLE
+                (holder as SenderReplyViewHolder).QuotedTxt.text = chatList.get(position).quote
+                (holder as SenderReplyViewHolder).sndReplyTxt.text = chatList.get(position).message
+                holder.name.text = chatList.get(holder.adapterPosition).type
+                holder.quotedImgSndr.visibility = View.GONE
+            }
+
             (holder as SenderReplyViewHolder).senderReplyMsgTime.text = SimpleDateFormat(
                 "hh:mm a",
                 Locale.getDefault()
@@ -457,10 +472,10 @@ open class ChatAdapter(val context: Context, chatlist: ArrayList<ChatModel>) :
                                             val map = HashMap<String, Any>()
                                             map.put("message", "this is message is deleted")
                                             map.put("type", "sender")
-                                            map.put("quotepos", holder.adapterPosition)
-                                            map.put("quote", "")
+                                            map.put("quotepos",-1)
+                                            map.put("quote","")
                                             ds.ref.updateChildren(map)
-                                            notifyItemChanged(holder.adapterPosition)
+
 
 
                                         }
@@ -485,7 +500,9 @@ open class ChatAdapter(val context: Context, chatlist: ArrayList<ChatModel>) :
                 }
 
             })
-        } else if (chatList.get(holder.adapterPosition).quotepos != -1 && chatList.get(holder.adapterPosition).type
+        }
+
+        else if (chatList.get(holder.adapterPosition).quotepos != -1 && chatList.get(holder.adapterPosition).type
                 .equals("receiver")
         ) {
             var previousMsg: Long? = 0
@@ -575,8 +592,6 @@ open class ChatAdapter(val context: Context, chatlist: ArrayList<ChatModel>) :
                                             val map = HashMap<String, Any>()
                                             map.put("message", "this is message is deleted")
                                             map.put("type", "receiver")
-                                            map.put("quotepos", holder.adapterPosition)
-                                            map.put("quote", "")
                                             ds.ref.updateChildren(map)
                                             notifyItemChanged(holder.adapterPosition)
 
@@ -794,6 +809,8 @@ open class ChatAdapter(val context: Context, chatlist: ArrayList<ChatModel>) :
         val reply: ConstraintLayout = itemView.findViewById(R.id.reply)
         val date2: TextView = itemView.findViewById(R.id.date2)
         val senderReplyMsgTime: TextView = itemView.findViewById(R.id.sender_reply_msg_time)
+        val quotedImgSndr : ImageView = itemView.findViewById(R.id.quoted_img)
+        val name : TextView = itemView.findViewById(R.id.name)
     }
 
     inner class ReceiverReplyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -801,6 +818,7 @@ open class ChatAdapter(val context: Context, chatlist: ArrayList<ChatModel>) :
         val QuotedTxt: TextView = itemView.findViewById(R.id.textQuote1)
         val reply1: ConstraintLayout = itemView.findViewById(R.id.reply1)
         val date3: TextView = itemView.findViewById(R.id.date3)
+        val quotedImgRecvr : ImageView = itemView.findViewById(R.id.quoted_img_receiver)
     }
 
     inner class SenderImgViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
