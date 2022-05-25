@@ -38,16 +38,20 @@ import ChatModel
 
 import ChatAdapter
 import android.content.pm.PackageManager
+import android.media.MediaPlayer
+import android.media.MediaRecorder
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment.STYLE_NORMAL
 import com.bumptech.glide.Glide
 
 
 class MainActivity : AppCompatActivity(), ChatAdapter.QuoteClickListener {
     private val CAMERA_PERMISSION_REQUEST_CODE: Int = 400
     private val STORAGE_PERMISSION_REQUEST_CODE: Int = 500
+    private val RECORD_AUDIO_PERMISSION_CODE : Int = 300
     private lateinit var mainViewModel: MainViewModel
 
     //    lateinit var myPostsBinding: MyPostsBinding
@@ -81,6 +85,7 @@ class MainActivity : AppCompatActivity(), ChatAdapter.QuoteClickListener {
     lateinit var imageuri: Uri
     lateinit var downloadUri: Uri
     lateinit var imgQuotedMsg: ImageView
+
 
 
     val manager = LinearLayoutManager(this)
@@ -306,6 +311,7 @@ class MainActivity : AppCompatActivity(), ChatAdapter.QuoteClickListener {
                     if (replyLayout.visibility == VISIBLE) {
                         replyLayout.visibility = GONE
                         if (chatList.get(quotePos).type.equals("senderImage")){
+
                             val msg: String = chatEdt.text.toString()
                             val map = HashMap<String, Any>()
                             map.put("message", msg)
@@ -344,6 +350,24 @@ class MainActivity : AppCompatActivity(), ChatAdapter.QuoteClickListener {
                 chatEdt.text.clear()
             }
 
+        })
+
+        sendChat.setOnClickListener(object : View.OnClickListener{
+            override fun onClick(p0: View?) {
+                if (chatEdt.text.isEmpty()){
+                    if (!checkRecordAudioPermisssion()){
+                        requestRecordAudioPermission()
+                    }else {
+                        val recordAudioBottomSheet = RecordAudioBottomSheet()
+                        recordAudioBottomSheet.setStyle(
+                            STYLE_NORMAL,
+                            R.style.AppBottomSheetDialogTheme
+                        )
+                        recordAudioBottomSheet.show(supportFragmentManager, "record audio sheet")
+                    }
+
+                }
+            }
         })
 
 
@@ -651,11 +675,23 @@ class MainActivity : AppCompatActivity(), ChatAdapter.QuoteClickListener {
 //    }
 
     }
+    fun checkRecordAudioPermisssion() : Boolean{
+        if (ContextCompat.checkSelfPermission(this,android.Manifest.permission.RECORD_AUDIO)
+        != PackageManager.PERMISSION_GRANTED){
+            return false
+        }
+        return true
+    }
+
+    fun requestRecordAudioPermission(){
+        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.RECORD_AUDIO)
+            ,RECORD_AUDIO_PERMISSION_CODE)
+    }
 
     fun checkStoragePermission(): Boolean {
         if (ContextCompat.checkSelfPermission(
                 this, android.Manifest.permission
-                    .WRITE_EXTERNAL_STORAGE
+                    .MANAGE_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             return false
@@ -669,7 +705,7 @@ class MainActivity : AppCompatActivity(), ChatAdapter.QuoteClickListener {
                 android.Manifest.permission.CAMERA
             ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
                 this,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                android.Manifest.permission.MANAGE_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             return false
@@ -689,7 +725,7 @@ class MainActivity : AppCompatActivity(), ChatAdapter.QuoteClickListener {
     fun requestStoragePermission() {
         ActivityCompat.requestPermissions(
             this,
-            arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            arrayOf(android.Manifest.permission.MANAGE_EXTERNAL_STORAGE),
             STORAGE_PERMISSION_REQUEST_CODE
         )
 
@@ -714,6 +750,12 @@ class MainActivity : AppCompatActivity(), ChatAdapter.QuoteClickListener {
                 } else {
                     Toast.makeText(this, "permission denied", Toast.LENGTH_SHORT).show()
 
+                }
+            RECORD_AUDIO_PERMISSION_CODE ->
+                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    Toast.makeText(this,"permission granted",Toast.LENGTH_SHORT).show()
+                }else{
+                    Toast.makeText(this,"permission denied",Toast.LENGTH_SHORT).show()
                 }
         }
 

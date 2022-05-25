@@ -54,7 +54,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chats_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="550dp"
+        android:layout_height="570dp"
         android:background="#EAF4FB"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -123,7 +123,7 @@
 
     <LinearLayout
         android:id="@+id/editor_layout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -132,7 +132,7 @@
 
         <EditText
             android:id="@+id/ent_msg"
-            android:layout_width="330dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins"
             android:hint="Type a message"
@@ -149,7 +149,7 @@
             android:id="@+id/send_chat_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="1dp"
             android:layout_marginTop="5dp"
             android:src="@drawable/microphone" />
 
@@ -175,5 +175,6 @@
     <!--        app:layout_constraintTop_toBottomOf="@id/editor_layout"-->
     <!--        app:layout_constraintStart_toStartOf="parent"-->
     <!--        android:layout_marginLeft="320dp"/>-->
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
