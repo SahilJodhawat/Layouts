@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.media.MediaPlayer
 import android.media.MediaRecorder
+import android.media.audiofx.Visualizer
 import android.net.Uri
 import android.os.*
 import android.provider.MediaStore
@@ -13,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Chronometer
 import android.widget.ImageView
 import android.widget.TextView
@@ -22,8 +24,11 @@ import androidx.core.os.EnvironmentCompat
 import com.chibde.visualizer.LineBarVisualizer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.firebase.storage.FirebaseStorage
+import com.visualizer.amplitude.AudioRecordView
 import java.io.File
 import java.io.IOException
+import java.util.*
 
 
 /**
@@ -35,10 +40,12 @@ class RecordAudioBottomSheet : BottomSheetDialogFragment() {
     lateinit var recordMic: ImageView
     lateinit var recordTimer: Chronometer
     lateinit var recordInfo: TextView
-    lateinit var recordAudioVisualizer: LineBarVisualizer
-    lateinit var mMediaRecorder: MediaRecorder
+    var mMediaRecorder: MediaRecorder? = null
     lateinit var mMediaPlayer: MediaPlayer
+    lateinit var recordVisualizer : AudioRecordView
     var filename: String = ""
+    var timer : Timer? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,7 +62,7 @@ class RecordAudioBottomSheet : BottomSheetDialogFragment() {
         recordMic = view.findViewById(R.id.record_audio_mic)
         recordTimer = view.findViewById(R.id.record_audio_count)
         recordInfo = view.findViewById(R.id.record_info)
-        recordAudioVisualizer = view.findViewById(R.id.record_audio_visualizer)
+        recordVisualizer = view.findViewById(R.id.record_visualizer)
         mMediaPlayer = MediaPlayer()
         filename = File(
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_RECORDINGS)
@@ -78,13 +85,13 @@ class RecordAudioBottomSheet : BottomSheetDialogFragment() {
                         stopRecording()
 
 
-                    } else if (p1.action == MotionEvent.ACTION_DOWN) {
 
-                        startRecording()
+                    } else if (p1.action == MotionEvent.ACTION_DOWN) {
                         recordTimer.start()
                         recordTimer.base = SystemClock.elapsedRealtime()
                         recordMic.setBackgroundResource(R.drawable.mic_background)
-                        recordInfo.visibility = View.GONE
+                        recordInfo.text = "Recording audio"
+                        startRecording()
 
 
                     }
@@ -92,7 +99,9 @@ class RecordAudioBottomSheet : BottomSheetDialogFragment() {
                 }
 
             })
+
     }
+
 
     override fun onStart() {
         super.onStart()
@@ -102,24 +111,56 @@ class RecordAudioBottomSheet : BottomSheetDialogFragment() {
 
     @RequiresApi(Build.VERSION_CODES.S)
     fun startRecording() {
-        mMediaRecorder = MediaRecorder(requireContext())
-        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC)
-        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT)
-        mMediaRecorder.setOutputFile(filename)
-        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+        mMediaRecorder = MediaRecorder()
+        mMediaRecorder?.setAudioSource(MediaRecorder.AudioSource.MIC)
+        mMediaRecorder?.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT)
+        mMediaRecorder?.setOutputFile(filename)
+        mMediaRecorder?.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+        mMediaRecorder?.setAudioSamplingRate(8000)
+        mMediaRecorder?.setAudioEncodingBitRate(8000)
         try {
-            mMediaRecorder.prepare()
+            mMediaRecorder!!.prepare()
+            mMediaRecorder!!.start()
         } catch (e: IOException) {
             Log.d("prepareErr", e.toString())
         }
-        mMediaRecorder.start()
+
+  timer = Timer()
+        timer?.schedule(object : TimerTask(){
+            override fun run() {
+
+                try{
+                    val currentMaxAmplitude = mMediaRecorder?.maxAmplitude
+                    recordVisualizer.update(currentMaxAmplitude ?: 0)
+                }catch (e : Exception)
+                {
+                    Log.d("amplitude",e.toString())
+                }
+
+
+            }
+
+        },0,100)
+
 
 
     }
 
     fun stopRecording() {
-        mMediaRecorder.stop()
-        mMediaRecorder.release()
+        try {
+            mMediaRecorder?.stop()
+            mMediaRecorder?.reset()
+            mMediaRecorder?.release()
+        }catch (e : Exception){
+            Log.d("recStoperr",e.toString())
+        }
+
+        mMediaRecorder = null
+        timer?.cancel()
+        recordVisualizer.recreate()
+
+
+
 
 
     }

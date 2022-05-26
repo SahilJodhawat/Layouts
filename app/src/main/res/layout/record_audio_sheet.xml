@@ -13,6 +13,7 @@
         android:layout_gravity="center"
         android:layout_marginBottom="200dp">
 
+
         <TextView
             android:id="@+id/record_info"
             android:layout_width="wrap_content"
@@ -48,14 +49,22 @@
             android:layout_marginTop="25dp"
             android:textSize="25sp"/>
 
-<com.chibde.visualizer.LineBarVisualizer
-    android:id="@+id/record_audio_visualizer"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+<com.visualizer.amplitude.AudioRecordView
+    android:id="@+id/record_visualizer"
+    android:layout_width="150dp"
+    android:layout_height="50dp"
+    android:layout_marginTop="5dp"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toBottomOf="@id/record_audio_count"
-    android:layout_marginTop="25dp"/>
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:chunkAlignTo="center"
+    app:chunkColor="#81ACB8"
+    app:chunkWidth="2dp"
+    app:chunkSpace="1dp"
+    app:chunkRoundedCorners="true"
+    app:chunkMaxHeight="45dp"
+    app:chunkSoftTransition="false"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

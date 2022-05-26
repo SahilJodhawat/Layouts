@@ -383,14 +383,14 @@ open class ChatAdapter(val context: Context, chatlist: ArrayList<ChatModel>) :
                 "hh:mm a",
                 Locale.getDefault()
             ).format(Date(chatList.get(holder.adapterPosition).dateFormat!!))
-            (holder as SenderReplyViewHolder).reply.setOnClickListener(object :
-                View.OnClickListener {
-                override fun onClick(p0: View?) {
-                    mQuoteClickListener!!.onQuoteClick(chatList.get(holder.adapterPosition).quotepos!!)
-
-                }
-
-            })
+//            (holder as SenderReplyViewHolder).reply.setOnClickListener(object :
+//                View.OnClickListener {
+//                override fun onClick(p0: View?) {
+//                    mQuoteClickListener!!.onQuoteClick(chatList.get(holder.adapterPosition).quotepos!!)
+//
+//                }
+//
+//            })
 
             var previousMsg: Long? = 0
             if (holder.adapterPosition != 0) {

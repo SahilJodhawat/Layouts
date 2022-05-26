@@ -44,11 +44,12 @@ dependencies {
     // Adding chibde audio visualizer Library
     implementation 'com.chibde:audiovisualizer:2.2.0'
 
+
     implementation 'com.github.bumptech.glide:glide:4.13.0'
     kapt 'com.github.bumptech.glide:compiler:4.13.0'
     implementation "androidx.appcompat:appcompat:$rootProject.appCompatVersion"
     implementation "androidx.activity:activity-ktx:$rootProject.activityVersion"
-
+    implementation   'com.github.Armen101:AudioRecordView:1.0.5'
     // Dependencies for working with Architecture components
     // You'll probably have to update the version numbers in build.gradle (Project)
 

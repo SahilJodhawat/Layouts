@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:background="#EAF4FB">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/dips_toolbar"
@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/white">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -41,25 +42,6 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="0dp"
-        android:layout_height="3dp"
-        android:layout_marginTop="1dp"
-        android:background="#E1DFDF"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dips_toolbar" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/chats_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="570dp"
-        android:background="#EAF4FB"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view" />
-
     <ProgressBar
         android:id="@+id/chat_prgs_bar"
         style="@style/TextAppearance.AppCompat.Large"
@@ -69,7 +51,15 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chats_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="58dp"
+        android:layout_marginBottom="58dp"/>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/reply_layout"
@@ -123,12 +113,14 @@
 
     <LinearLayout
         android:id="@+id/editor_layout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chats_recycler_view">
+        android:background="@color/white"
+        android:padding="1dp"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <EditText
             android:id="@+id/ent_msg"
@@ -136,14 +128,16 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins"
             android:hint="Type a message"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:layout_weight="12"/>
 
         <ImageView
             android:id="@+id/attachment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:src="@drawable/attachment" />
+            android:src="@drawable/attachment"
+            android:layout_weight="1"/>
 
         <ImageView
             android:id="@+id/send_chat_img"
@@ -151,7 +145,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="1dp"
             android:layout_marginTop="5dp"
-            android:src="@drawable/microphone" />
+            android:src="@drawable/microphone"
+            android:layout_weight="1"/>
 
 
     </LinearLayout>
