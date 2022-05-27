@@ -1,10 +1,14 @@
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.res.Resources
+import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.media.MediaPlayer
 import android.net.Uri
 import android.provider.CalendarContract
+import android.provider.MediaStore
 import android.text.TextUtils
 import android.text.format.DateFormat.format
 import android.text.format.DateUtils
@@ -27,6 +31,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
+import com.chibde.visualizer.LineBarVisualizer
 import com.example.layouts.R
 import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
@@ -38,6 +43,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import java.lang.String.format
+import java.net.URL
 import java.text.DateFormat
 
 
@@ -53,6 +59,7 @@ open class ChatAdapter(val context: Context, chatlist: ArrayList<ChatModel>) :
     val MSG_REPLY_RIGHT = 2
     val MSG_REPLY_LEFT = 3
     val IMG_MSG = 4
+    val AUDIO_MSG = 5
 
     var chatList: ArrayList<ChatModel> = chatlist
 
@@ -91,6 +98,10 @@ open class ChatAdapter(val context: Context, chatlist: ArrayList<ChatModel>) :
                 LayoutInflater.from(parent.context).inflate(R.layout.receiver_chat, parent, false)
             )
         }
+        if (viewType == AUDIO_MSG){
+            return SenderAudioViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.sender_audio_message,parent,false))
+        }
+
         return ReceiverReplyViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.receiver_reply, parent, false)
         )
@@ -761,6 +772,46 @@ open class ChatAdapter(val context: Context, chatlist: ArrayList<ChatModel>) :
 
 
         }
+        if (chatList.get(holder.adapterPosition).type.equals("senderAudio")){
+            (holder as SenderAudioViewHolder).audioPlayBtn.setOnClickListener(object : View.OnClickListener{
+                override fun onClick(p0: View?) {
+                    holder.audioPlayBtn.setImageResource(R.drawable.pause_audio)
+                    var mediaPlayer : MediaPlayer? = MediaPlayer()
+                    val audioUrl = chatList.get(holder.adapterPosition).message
+                    Log.d("audioUrl",audioUrl!!)
+                    mediaPlayer!!.setDataSource(audioUrl)
+
+                        mediaPlayer.prepareAsync()
+
+
+                    mediaPlayer.setOnPreparedListener(object : MediaPlayer.OnPreparedListener{
+                        override fun onPrepared(p0: MediaPlayer?) {
+                           p0!!.start()
+
+
+
+                        }
+
+                    })
+                    holder.audioVisualizer.visibility = View.VISIBLE
+                    holder.audioVisualizer.setColor(Color.GRAY)
+                    holder.audioVisualizer.setDensity(60F)
+                    holder.audioVisualizer.setPlayer(mediaPlayer!!.audioSessionId)
+
+                    mediaPlayer.setOnCompletionListener {
+                        holder.audioPlayBtn.setImageResource(R.drawable.audio_play_btn)
+                        it.release()
+                        mediaPlayer = null
+                        holder.audioVisualizer.release()
+
+                    }
+
+
+
+                }
+            })
+        }
+
 
 
     }
@@ -781,7 +832,11 @@ open class ChatAdapter(val context: Context, chatlist: ArrayList<ChatModel>) :
             return MSG_LEFT
         } else if (chatList.get(position).type.equals("receiver") && chatList.get(position).quotepos != -1) {
             return MSG_REPLY_LEFT
-        } else {
+        }
+        if (chatList.get(position).type.equals("senderAudio")){
+            return AUDIO_MSG
+        }
+        else {
             return IMG_MSG
         }
 
@@ -828,7 +883,12 @@ open class ChatAdapter(val context: Context, chatlist: ArrayList<ChatModel>) :
     }
 
 
+  inner  class SenderAudioViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+       val audioPlayBtn : ImageView = itemView.findViewById(R.id.play_audio_msg)
+       val audioVisualizer : LineBarVisualizer = itemView.findViewById(R.id.play_visualizer)
+    }
 }
+
 
 
 

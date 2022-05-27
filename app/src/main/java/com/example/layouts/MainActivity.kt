@@ -162,9 +162,11 @@ class MainActivity : AppCompatActivity(), ChatAdapter.QuoteClickListener {
                 })
                 openImg.setOnClickListener(object : View.OnClickListener {
                     override fun onClick(p0: View?) {
-                        if (!checkCameraPermission() && !checkStoragePermission()) {
+                        if (!checkCameraPermission()) {
                             requestCameraPermission()
-                            requestStoragePermission()
+                             if(!checkStoragePermission()) {
+                                requestStoragePermission()
+                            }
                         } else {
                             val contentValues = ContentValues()
                             contentValues.put(MediaStore.Images.Media.TITLE, "Temp_pic")

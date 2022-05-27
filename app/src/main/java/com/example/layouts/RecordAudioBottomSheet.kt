@@ -24,11 +24,14 @@ import androidx.core.os.EnvironmentCompat
 import com.chibde.visualizer.LineBarVisualizer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ServerValue
 import com.google.firebase.storage.FirebaseStorage
 import com.visualizer.amplitude.AudioRecordView
 import java.io.File
 import java.io.IOException
 import java.util.*
+import kotlin.collections.HashMap
 
 
 /**
@@ -67,8 +70,7 @@ class RecordAudioBottomSheet : BottomSheetDialogFragment() {
         filename = File(
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_RECORDINGS)
                 .toString()
-        ).toString()
-
+    ).toString()
 
         filename = filename + "/audioRecording.mp3"
         Log.d("filename", filename)
@@ -113,11 +115,9 @@ class RecordAudioBottomSheet : BottomSheetDialogFragment() {
     fun startRecording() {
         mMediaRecorder = MediaRecorder()
         mMediaRecorder?.setAudioSource(MediaRecorder.AudioSource.MIC)
-        mMediaRecorder?.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT)
+        mMediaRecorder?.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
         mMediaRecorder?.setOutputFile(filename)
         mMediaRecorder?.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
-        mMediaRecorder?.setAudioSamplingRate(8000)
-        mMediaRecorder?.setAudioEncodingBitRate(8000)
         try {
             mMediaRecorder!!.prepare()
             mMediaRecorder!!.start()
@@ -158,10 +158,39 @@ class RecordAudioBottomSheet : BottomSheetDialogFragment() {
         mMediaRecorder = null
         timer?.cancel()
         recordVisualizer.recreate()
+ uploadAudio()
 
 
 
 
+    }
 
+    private fun uploadAudio() {
+        val audioUri = Uri.fromFile(File(filename))
+        val storageRef = FirebaseStorage.getInstance().getReference().child("Audio").child("files.mp3"+System.currentTimeMillis())
+         storageRef.putFile(audioUri).continueWithTask {
+             if (it.isSuccessful){
+                 dismiss()
+                 Log.d("successMsg","audio uploaded")
+             }else{
+                 Log.d("uploadedErr",it.exception.toString())
+             }
+             storageRef.downloadUrl
+
+         }.addOnCompleteListener{
+
+             if (it.isSuccessful){
+                 val audioDownloadUrl = it.result.toString()
+                 val map = HashMap<String,Any>()
+                 map.put("message",audioDownloadUrl)
+                 map.put("mediaType","audio")
+                 map.put("type","senderAudio")
+                 map.put("dateFormat",ServerValue.TIMESTAMP)
+                 val dbRef = FirebaseDatabase.getInstance().getReference().child("Chats")
+                 dbRef.push().updateChildren(map)
+             }else{
+                 Log.d("audioDwndE",it.exception.toString())
+             }
+         }
     }
 }
