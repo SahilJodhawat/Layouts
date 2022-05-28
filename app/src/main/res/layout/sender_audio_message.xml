@@ -21,18 +21,26 @@
         app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/audio_play_btn"/>
 
-    <com.chibde.visualizer.LineBarVisualizer
-        android:id="@+id/play_visualizer"
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:paddingStart="5dp"
-        android:paddingEnd="5dp"
-        android:layout_marginTop="5dp"
+    <rm.com.audiowave.AudioWaveView
+        android:id="@+id/audio_wave_bar"
+        android:layout_width="140dp"
+        android:layout_height="32dp"
+        android:layout_marginRight="5dp"
+        android:padding="4dp"
+        android:layout_marginTop="3dp"
+        app:animateExpansion="false"
         app:layout_constraintStart_toEndOf="@id/play_audio_msg"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:chunkWidth="3dp"
+        app:chunkHeight="24dp"
+        app:minChunkHeight="2dp"
+        app:chunkSpacing="1dp"
+        app:chunkRadius="15dp"
+        app:touchable="true"
+        app:waveColor="@color/black"
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -5,8 +5,10 @@ import android.content.DialogInterface
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
+import android.os.Build
 import android.provider.CalendarContract
 import android.provider.MediaStore
 import android.text.TextUtils
@@ -19,6 +21,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -33,11 +36,39 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.chibde.visualizer.LineBarVisualizer
 import com.example.layouts.R
+import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.audio.AudioRendererEventListener
+import com.google.android.exoplayer2.decoder.DecoderCounters
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
+import com.google.android.exoplayer2.extractor.ExtractorsFactory
+import com.google.android.exoplayer2.source.ExtractorMediaSource
+import com.google.android.exoplayer2.source.MediaSource
+import com.google.android.exoplayer2.source.TrackGroupArray
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray
+import com.google.android.exoplayer2.trackselection.TrackSelector
+import com.google.android.exoplayer2.upstream.BandwidthMeter
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.google.android.gms.common.util.IOUtils
 import com.google.firebase.database.*
+import com.masoudss.lib.WaveformSeekBar
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import linc.com.amplituda.Amplituda
+import linc.com.amplituda.AmplitudaResult
 import okhttp3.internal.Util
 import org.w3c.dom.Text
+import rm.com.audiowave.AudioWaveView
+import rm.com.audiowave.OnProgressListener
+import rm.com.audiowave.OnSamplingListener
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.lang.Exception
+import java.lang.IndexOutOfBoundsException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -60,6 +91,8 @@ open class ChatAdapter(val context: Context, chatlist: ArrayList<ChatModel>) :
     val MSG_REPLY_LEFT = 3
     val IMG_MSG = 4
     val AUDIO_MSG = 5
+    var mediaPlayer : MediaPlayer? = null
+    var simpleExoPlayer : SimpleExoPlayer? = null
 
     var chatList: ArrayList<ChatModel> = chatlist
 
@@ -730,8 +763,7 @@ open class ChatAdapter(val context: Context, chatlist: ArrayList<ChatModel>) :
                     val builder: AlertDialog.Builder = AlertDialog.Builder(p0!!.context)
                     builder.setMessage("Are you sure you want to delete this Image?")
                         .setPositiveButton("Yes", object : DialogInterface.OnClickListener {
-                            override fun onClick(p0: DialogInterface?, p1: Int) {
-                                var msg = chatList.get(holder.adapterPosition).message
+                            override fun onClick(p0: DialogInterface?, p1: Int) {var msg = chatList.get(holder.adapterPosition).message
                                 var timestamp = chatList.get(holder.adapterPosition).dateFormat
                                 Log.d("timestamp", timestamp.toString())
                                 Log.d("msg1", msg.toString())
@@ -773,38 +805,129 @@ open class ChatAdapter(val context: Context, chatlist: ArrayList<ChatModel>) :
 
         }
         if (chatList.get(holder.adapterPosition).type.equals("senderAudio")){
+
             (holder as SenderAudioViewHolder).audioPlayBtn.setOnClickListener(object : View.OnClickListener{
                 override fun onClick(p0: View?) {
                     holder.audioPlayBtn.setImageResource(R.drawable.pause_audio)
-                    var mediaPlayer : MediaPlayer? = MediaPlayer()
-                    val audioUrl = chatList.get(holder.adapterPosition).message
-                    Log.d("audioUrl",audioUrl!!)
-                    mediaPlayer!!.setDataSource(audioUrl)
+                    try {
+                        val bandWidthMeter = DefaultBandwidthMeter()
+                        val trackSelector : TrackSelector = DefaultTrackSelector(AdaptiveTrackSelection.Factory(bandWidthMeter))
+                        simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(context,trackSelector)
 
-                        mediaPlayer.prepareAsync()
+                        val audioUrl = Uri.parse(chatList.get(holder.adapterPosition).message)
+                        val defaultHttpSourceFactory = DefaultHttpDataSourceFactory("record_audio")
+                        val extractorFactory : ExtractorsFactory = DefaultExtractorsFactory()
+                        val extractMediaSource : MediaSource = ExtractorMediaSource(audioUrl,defaultHttpSourceFactory,extractorFactory
+                            ,null,null)
+
+                        simpleExoPlayer!!.prepare(extractMediaSource)
+
+                        simpleExoPlayer!!.playWhenReady = true
+CoroutineScope(Dispatchers.IO).launch {
+    val url  = URL(chatList.get(holder.adapterPosition).message)
+    val connection = url.openConnection()
+    connection.connect()
+    val bytes = connection.getInputStream().readBytes()
+
+holder.audioWaveBar.setRawData(bytes)
+    Log.d("bytes", bytes.contentToString())
 
 
-                    mediaPlayer.setOnPreparedListener(object : MediaPlayer.OnPreparedListener{
-                        override fun onPrepared(p0: MediaPlayer?) {
-                           p0!!.start()
+
+}
 
 
+
+
+
+
+                            simpleExoPlayer!!.setAudioDebugListener(object : AudioRendererEventListener{
+                                override fun onAudioEnabled(counters: DecoderCounters?) {
+
+                                }
+
+                                override fun onAudioSessionId(audioSessionId: Int) {
+
+                                }
+
+                                override fun onAudioDecoderInitialized(
+                                    decoderName: String?,
+                                    initializedTimestampMs: Long,
+                                    initializationDurationMs: Long
+                                ) {
+
+                                }
+
+                                override fun onAudioInputFormatChanged(format: Format?) {
+
+                                }
+
+                                override fun onAudioTrackUnderrun(
+                                    bufferSize: Int,
+                                    bufferSizeMs: Long,
+                                    elapsedSinceLastFeedMs: Long
+                                ) {
+                                    Log.d("bufferSize",bufferSize.toString())
+                                }
+
+                                override fun onAudioDisabled(counters: DecoderCounters?) {
+
+                                }
+
+                            })
+
+
+
+
+
+                    }catch (e : Exception){
+                        Log.d("exoPlayer",e.toString())
+                    }
+
+
+                    simpleExoPlayer!!.addListener(object : ExoPlayer.EventListener{
+                        override fun onTimelineChanged(timeline: Timeline?, manifest: Any?) {
+
+                        }
+
+                        override fun onTracksChanged(
+                            trackGroups: TrackGroupArray?,
+                            trackSelections: TrackSelectionArray?
+                        ) {
+
+                        }
+
+                        override fun onLoadingChanged(isLoading: Boolean) {
+
+                        }
+
+
+                        override fun onPlayerStateChanged(
+                            playWhenReady: Boolean,
+                            playbackState: Int
+                        ) {
+                            if (playbackState == ExoPlayer.STATE_ENDED){
+                                holder.audioPlayBtn.setImageResource(R.drawable.audio_play_btn)
+                                simpleExoPlayer!!.release()
+
+                            }
+
+                        }
+
+                        override fun onPlayerError(error: ExoPlaybackException?) {
+
+                        }
+
+                        override fun onPositionDiscontinuity() {
+
+                        }
+
+                        override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters?) {
 
                         }
 
                     })
-                    holder.audioVisualizer.visibility = View.VISIBLE
-                    holder.audioVisualizer.setColor(Color.GRAY)
-                    holder.audioVisualizer.setDensity(60F)
-                    holder.audioVisualizer.setPlayer(mediaPlayer!!.audioSessionId)
 
-                    mediaPlayer.setOnCompletionListener {
-                        holder.audioPlayBtn.setImageResource(R.drawable.audio_play_btn)
-                        it.release()
-                        mediaPlayer = null
-                        holder.audioVisualizer.release()
-
-                    }
 
 
 
@@ -885,7 +1008,7 @@ open class ChatAdapter(val context: Context, chatlist: ArrayList<ChatModel>) :
 
   inner  class SenderAudioViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
        val audioPlayBtn : ImageView = itemView.findViewById(R.id.play_audio_msg)
-       val audioVisualizer : LineBarVisualizer = itemView.findViewById(R.id.play_visualizer)
+       val audioWaveBar : AudioWaveView = itemView.findViewById(R.id.audio_wave_bar)
     }
 }
 
