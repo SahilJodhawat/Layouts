@@ -115,9 +115,9 @@ class RecordAudioBottomSheet : BottomSheetDialogFragment() {
     fun startRecording() {
         mMediaRecorder = MediaRecorder()
         mMediaRecorder?.setAudioSource(MediaRecorder.AudioSource.MIC)
-        mMediaRecorder?.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+        mMediaRecorder?.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
         mMediaRecorder?.setOutputFile(filename)
-        mMediaRecorder?.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+        mMediaRecorder?.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
         try {
             mMediaRecorder!!.prepare()
             mMediaRecorder!!.start()

@@ -44,7 +44,6 @@ dependencies {
     // Adding chibde audio visualizer Library
     implementation 'com.chibde:audiovisualizer:2.2.0'
     implementation 'com.github.alxrm:audiowave-progressbar:0.9.2'
-
     implementation 'com.github.bumptech.glide:glide:4.13.0'
     kapt 'com.github.bumptech.glide:compiler:4.13.0'
     implementation "androidx.appcompat:appcompat:$rootProject.appCompatVersion"
