@@ -11,7 +11,7 @@
     android:layout_marginRight="10dp"
     android:layout_marginTop="5dp"
     android:layout_marginBottom="5dp"
-    android:padding="8dp"
+    android:padding="6dp"
     android:background="@drawable/sender_chat_background">
 
     <ImageView
@@ -22,35 +22,45 @@
         app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/audio_play_btn"/>
 
-    <rm.com.audiowave.AudioWaveView
+<!--    <rm.com.audiowave.AudioWaveView-->
+<!--        android:id="@+id/audio_wave_bar"-->
+<!--        android:layout_width="120dp"-->
+<!--        android:layout_height="32dp"-->
+<!--        android:layout_marginRight="3dp"-->
+<!--        android:layout_marginTop="8dp"-->
+<!--        app:animateExpansion="false"-->
+<!--        app:layout_constraintStart_toEndOf="@id/play_audio_msg"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintEnd_toStartOf="@id/audio_timeline"-->
+<!--        app:chunkWidth="2dp"-->
+<!--        app:chunkHeight="24dp"-->
+<!--        app:minChunkHeight="1dp"-->
+<!--        app:chunkSpacing="1dp"-->
+<!--        app:chunkRadius="15dp"-->
+<!--        app:touchable="true"-->
+<!--        />-->
+
+    <com.chibde.visualizer.LineBarVisualizer
         android:id="@+id/audio_wave_bar"
         android:layout_width="120dp"
-        android:layout_height="32dp"
-        android:layout_marginRight="5dp"
-        android:padding="4dp"
-        android:layout_marginTop="8dp"
-        app:animateExpansion="false"
+        android:layout_height="20dp"
         app:layout_constraintStart_toEndOf="@id/play_audio_msg"
+        app:layout_constraintEnd_toStartOf="@id/audio_timeline"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:chunkWidth="2dp"
-        app:chunkHeight="24dp"
-        app:minChunkHeight="1dp"
-        app:chunkSpacing="1dp"
-        app:chunkRadius="15dp"
-        app:touchable="true"
-        />
+        android:layout_marginTop="12dp"/>
 
     <TextView
         android:id="@+id/audio_timeline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="18dp"
         android:layout_marginStart="3dp"
         app:layout_constraintStart_toEndOf="@id/audio_wave_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"
+        android:textSize="8dp"
+        android:text="00:00"/>
 
 
 
