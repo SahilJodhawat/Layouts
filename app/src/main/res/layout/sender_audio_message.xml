@@ -22,6 +22,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/audio_play_btn"/>
 
+
 <!--    <rm.com.audiowave.AudioWaveView-->
 <!--        android:id="@+id/audio_wave_bar"-->
 <!--        android:layout_width="120dp"-->
