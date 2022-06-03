@@ -103,8 +103,10 @@ open class ChatAdapter(val context: Context, chatlist: ArrayList<ChatModel>) :
     val IMG_MSG = 4
     val AUDIO_MSG = 5
     var mediaPlayer : MediaPlayer? = null
-    var player : ExoPlayer? = null
+    var player : ExoPlayer? = ExoPlayer.Builder(context).build()
     var bytes : ByteArray? = null
+    var previous = 0
+    var current = 0
 //    lateinit var progressAnim : ObjectAnimator
 var duration : Long = 0
     var chatList: ArrayList<ChatModel> = chatlist
@@ -816,21 +818,27 @@ var duration : Long = 0
 
         }
         if (chatList.get(holder.adapterPosition).type.equals("senderAudio")){
-
             (holder as SenderAudioViewHolder).audioPlayBtn.setOnClickListener(object : View.OnClickListener{
                 override fun onClick(p0: View?) {
 
+
+
                         try {
+
                             if (player != null && player!!.playWhenReady && player!!.playbackState == Player.STATE_READY){
+                                holder.audioPlayBtn.setImageResource(R.drawable.audio_play_btn)
                                     player!!.stop()
                                    holder.audioWaveBar.release()
-                                timer.cancel()
-                                 //duration = player!!.currentPosition
+                                 duration = player!!.currentPosition
                                 holder.audioTimeLine.text = "00:00"
-                                    holder.audioPlayBtn.setImageResource(R.drawable.audio_play_btn)
+                                timer.cancel()
+                                Log.d("PlayerStopped","Stopped")
+
+                                previous = holder.absoluteAdapterPosition
 
 
                             }else {
+                                if (player != null) {
                                     holder.audioPlayBtn.setImageResource(R.drawable.pause_audio)
                                     player = ExoPlayer.Builder(context).build()
                                     val mediaItem =
@@ -842,47 +850,45 @@ var duration : Long = 0
                                     holder.audioWaveBar.setDensity(60f)
                                     holder.audioWaveBar.setColor(Color.BLACK)
                                     holder.audioWaveBar.setPlayer(player!!.audioSessionId)
+                                    Log.d("PlayerPlayed","Played")
+                                    current = holder.absoluteAdapterPosition
 
+                                }
                             }
 
+                            player!!.addListener(object : Player.Listener{
+                                override fun onPlaybackStateChanged(playbackState: Int) {
+                                    if (playbackState == Player.STATE_READY){
+                                        Log.d("isPlay","Playing")
+                                        timer = object : CountDownTimer(player!!.duration,1000){
+                                            override fun onTick(p0: Long) {
+                                                val time = String.format("%02d:%02d",p0 / 60000,
+                                                    p0 % 60000 / 1000)
+                                                holder.audioTimeLine.text = time
+                                            }
 
-                       player!!.addListener(object : Player.Listener{
-                           override fun onPlaybackStateChanged(playbackState: Int) {
-                               if (playbackState == Player.STATE_READY && player!!.playWhenReady){
-                                   Log.d("isPlay","Playing")
-                                   timer = object : CountDownTimer(player!!.contentDuration,1000){
-                                       override fun onTick(p0: Long) {
-                                           val time = String.format("%02d:%02d",p0 / 60000,
-                                               p0 % 60000 / 1000)
-                                           holder.audioTimeLine.text = time
-                                       }
+                                            override fun onFinish() {
+                                                holder.audioTimeLine.text = "00:00"
+                                            }
 
-                                       override fun onFinish() {
+                                        }.start()
 
-                                       }
+                                    }
 
-                                   }.start()
-
-                               }
-                               if (playbackState == Player.STATE_ENDED){
-                                   holder.audioPlayBtn.setImageResource(R.drawable.audio_play_btn)
-                                   player!!.release()
-                                   holder.audioWaveBar.release()
-                               }
-                           }
-
-
-
-                       })
+                                    if (playbackState == Player.STATE_ENDED){
+                                        holder.audioPlayBtn.setImageResource(R.drawable.audio_play_btn)
+                                        player!!.release()
+                                        holder.audioWaveBar.release()
+                                    }
+                                }
 
 
 
+                            })
 
-
-
-
-
-
+//if (previous != current){
+//    player!!.pause()
+//}
 
                         } catch (e: Exception) {
                             Log.d("exoPlayerErr", e.toString())
