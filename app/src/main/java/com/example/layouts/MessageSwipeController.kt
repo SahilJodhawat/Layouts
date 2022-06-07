@@ -22,7 +22,10 @@ import androidx.recyclerview.widget.RecyclerView
  * EMAIL mohammadsajjad679@gmail.com
  */
 
-class MessageSwipeController(private val context: Context, private val swipeControllerActions: SwipeControllerActions) : ItemTouchHelper.Callback() {
+class MessageSwipeController(
+    private val context: Context,
+    private val swipeControllerActions: SwipeControllerActions
+) : ItemTouchHelper.Callback() {
     private lateinit var imageDrawable: Drawable
     private lateinit var shareRound: Drawable
 
@@ -37,7 +40,10 @@ class MessageSwipeController(private val context: Context, private val swipeCont
     private var startTracking = false
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+    override fun getMovementFlags(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder
+    ): Int {
         mView = viewHolder.itemView
         imageDrawable = context.getDrawable(R.drawable.ic_reply_black_24dp)!!
         shareRound = context.getDrawable(R.drawable.ic_round_shape)!!
@@ -88,7 +94,8 @@ class MessageSwipeController(private val context: Context, private val swipeCont
     @SuppressLint("ClickableViewAccessibility")
     private fun setTouchListener(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
         recyclerView.setOnTouchListener { _, event ->
-            swipeBack = event.action == MotionEvent.ACTION_CANCEL || event.action == MotionEvent.ACTION_UP
+            swipeBack =
+                event.action == MotionEvent.ACTION_CANCEL || event.action == MotionEvent.ACTION_UP
             if (swipeBack) {
                 if (Math.abs(mView.translationX) >= this@MessageSwipeController.convertTodp(100)) {
                     swipeControllerActions.showReplyUI(viewHolder.adapterPosition)
@@ -164,7 +171,10 @@ class MessageSwipeController(private val context: Context, private val swipeCont
 
         val y = (mView.top + mView.measuredHeight / 2).toFloat()
         shareRound.colorFilter =
-            PorterDuffColorFilter(ContextCompat.getColor(context, R.color.colorE), PorterDuff.Mode.MULTIPLY)
+            PorterDuffColorFilter(
+                ContextCompat.getColor(context, R.color.colorE),
+                PorterDuff.Mode.MULTIPLY
+            )
 
         shareRound.setBounds(
             (x - convertTodp(18) * scale).toInt(),

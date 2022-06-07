@@ -1,81 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="start"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_gravity="start">
+
     <TextView
         android:id="@+id/date1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/receiver_layout"
-        android:gravity="center"
         android:background="@drawable/date_background"
-        android:text="13,may"/>
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="13,may"
+        android:textColor="@color/white"
+        android:textSize="9dp"
+        app:layout_constraintBottom_toTopOf="@id/receiver_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/receiver_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="19dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="5dp"
-        android:layout_marginTop="2dp"
-        app:layout_constraintTop_toBottomOf="@id/date1"
+        android:background="@drawable/receiver_chat_background"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="@drawable/chat_background2">
+        app:layout_constraintTop_toBottomOf="@id/date1">
 
         <TextView
             android:id="@+id/receiver_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeStepGranularity="2sp"
+            android:autoSizeTextType="uniform"
+            android:fontFamily="@font/roboto"
             android:paddingTop="6dp"
             android:paddingBottom="25dp"
-            android:layout_marginLeft="15dp"
             android:text="Hi, How are you?"
             android:textColor="#000000"
             android:textSize="14dp"
-            android:fontFamily="@font/roboto"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/user_name1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:textColor="#1D9DF3"
-            android:text="Receiver"
-            android:textSize="12dp"
-            android:layout_marginEnd="112dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="32dp"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginEnd="112dp"
+            android:layout_marginBottom="8dp"
+            android:text="Receiver"
+            android:textColor="#1D9DF3"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/receiver_msg_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="112dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="6dp"
+            android:fontFamily="@font/poppins"
             android:text="12:17"
             android:textColor="#999999"
             android:textSize="12dp"
-            android:layout_marginBottom="6dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginStart="112dp"
-            android:fontFamily="@font/poppins"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

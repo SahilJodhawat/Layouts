@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:fitsSystemWindows="true"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="#EAF4FB">
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/dips_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/white">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -23,10 +25,10 @@
         <androidx.constraintlayout.utils.widget.ImageFilterView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            app:roundPercent="1"
             android:layout_marginStart="40dp"
             android:background="#4C4B4B"
-            app:srcCompat="@drawable/academy"/>
+            app:roundPercent="1"
+            app:srcCompat="@drawable/academy" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -39,35 +41,25 @@
 
 
     </androidx.appcompat.widget.Toolbar>
-    <View
-        android:id="@+id/view"
-        android:layout_width="0dp"
-        android:layout_height="3dp"
-        android:layout_marginTop="1dp"
-        android:background="#E1DFDF"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dips_toolbar" />
-
-<androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/chats_recycler_view"
-    android:layout_width="match_parent"
-    android:layout_height="550dp"
-    android:background="#EAF4FB"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/view"/>
 
     <ProgressBar
         android:id="@+id/chat_prgs_bar"
+        style="@style/TextAppearance.AppCompat.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp"
-        style="@style/TextAppearance.AppCompat.Large"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chats_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="58dp"
+        android:layout_marginBottom="58dp"/>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/reply_layout"
@@ -78,6 +70,15 @@
         app:layout_constraintBottom_toTopOf="@+id/editor_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/ImgQuotedMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            app:layout_constraintEnd_toStartOf="@id/txtQuotedMsg"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/txtQuotedMsg"
@@ -93,7 +94,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text=" h ghgdhg fgd"/>
+            tools:text=" h ghgdhg fgd" />
 
         <ImageButton
             android:id="@+id/cancelButton"
@@ -105,65 +106,70 @@
             android:background="@drawable/ic_close_black_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <LinearLayout
         android:id="@+id/editor_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chats_recycler_view"
-        android:orientation="horizontal">
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/white"
+        android:padding="1dp"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <EditText
             android:id="@+id/ent_msg"
-            android:layout_width="330dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Type a message"
             android:fontFamily="@font/poppins"
-            android:padding="10dp"/>
+            android:hint="Type a message"
+            android:padding="10dp"
+            android:layout_weight="12"/>
 
         <ImageView
             android:id="@+id/attachment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:src="@drawable/attachment"
-            android:layout_marginTop="5dp"/>
+            android:layout_weight="1"/>
 
         <ImageView
+            android:id="@+id/send_chat_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/microphone"
+            android:layout_marginLeft="1dp"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="10dp"/>
-
-
-
+            android:src="@drawable/microphone"
+            android:layout_weight="1"/>
 
 
     </LinearLayout>
-<!--    <Button-->
-<!--        android:id="@+id/rvd_btn"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="received"-->
-<!--        android:textColor="@color/white"-->
-<!--        android:backgroundTint="#E42323"-->
-<!--        android:layout_marginStart="1dp"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/editor_layout"-->
-<!--        app:layout_constraintStart_toStartOf="parent"/>-->
-<!--    <Button-->
-<!--        android:id="@+id/snd_btn"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="send"-->
-<!--        android:textColor="@color/black"-->
-<!--        android:backgroundTint="#38E13F"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/editor_layout"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        android:layout_marginLeft="320dp"/>-->
+    <!--    <Button-->
+    <!--        android:id="@+id/rvd_btn"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="received"-->
+    <!--        android:textColor="@color/white"-->
+    <!--        android:backgroundTint="#E42323"-->
+    <!--        android:layout_marginStart="1dp"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/editor_layout"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"/>-->
+    <!--    <Button-->
+    <!--        android:id="@+id/snd_btn"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="send"-->
+    <!--        android:textColor="@color/black"-->
+    <!--        android:backgroundTint="#38E13F"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/editor_layout"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        android:layout_marginLeft="320dp"/>-->
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
