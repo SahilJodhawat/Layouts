@@ -51,7 +51,7 @@ import com.bumptech.glide.Glide
 class MainActivity : AppCompatActivity(), ChatAdapter.QuoteClickListener {
     private val CAMERA_PERMISSION_REQUEST_CODE: Int = 400
     private val STORAGE_PERMISSION_REQUEST_CODE: Int = 500
-    private val RECORD_AUDIO_PERMISSION_CODE : Int = 300
+    private val RECORD_AUDIO_PERMISSION_CODE: Int = 300
     private lateinit var mainViewModel: MainViewModel
 
     //    lateinit var myPostsBinding: MyPostsBinding
@@ -85,7 +85,6 @@ class MainActivity : AppCompatActivity(), ChatAdapter.QuoteClickListener {
     lateinit var imageuri: Uri
     lateinit var downloadUri: Uri
     lateinit var imgQuotedMsg: ImageView
-
 
 
     val manager = LinearLayoutManager(this)
@@ -164,7 +163,7 @@ class MainActivity : AppCompatActivity(), ChatAdapter.QuoteClickListener {
                     override fun onClick(p0: View?) {
                         if (!checkCameraPermission()) {
                             requestCameraPermission()
-                             if(!checkStoragePermission()) {
+                            if (!checkStoragePermission()) {
                                 requestStoragePermission()
                             }
                         } else {
@@ -309,24 +308,24 @@ class MainActivity : AppCompatActivity(), ChatAdapter.QuoteClickListener {
 
         sendChat.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
-                if (!chatEdt.text.isEmpty()) {
+                if (chatEdt.text.isNotEmpty()) {
                     if (replyLayout.visibility == VISIBLE) {
                         replyLayout.visibility = GONE
-                        if (chatList.get(quotePos).type.equals("senderImage")){
+                        if (chatList.get(quotePos).type.equals("senderImage")) {
 
                             val msg: String = chatEdt.text.toString()
                             val map = HashMap<String, Any>()
                             map.put("message", msg)
                             map.put("type", "sender")
-                            map.put("mediaType","image")
+                            map.put("mediaType", "image")
                             map.put("dateFormat", ServerValue.TIMESTAMP)
                             map.put("quotepos", quotePos)
                             map.put("quote", txtQuotedmsg.text.toString())
-                            Log.d("quoteImg",chatList.get(quotePos).type.toString())
+                            Log.d("quoteImg", chatList.get(quotePos).type.toString())
 
                             FirebaseDatabase.getInstance().getReference().child("Chats").push()
                                 .updateChildren(map)
-                        }else {
+                        } else {
                             val msg: String = chatEdt.text.toString()
                             val map = HashMap<String, Any>()
                             map.put("message", msg)
@@ -348,18 +347,10 @@ class MainActivity : AppCompatActivity(), ChatAdapter.QuoteClickListener {
                         FirebaseDatabase.getInstance().getReference().child("Chats").push()
                             .updateChildren(map)
                     }
-                }
-                chatEdt.text.clear()
-            }
-
-        })
-
-        sendChat.setOnClickListener(object : View.OnClickListener{
-            override fun onClick(p0: View?) {
-                if (chatEdt.text.isEmpty()){
-                    if (!checkRecordAudioPermisssion()){
+                } else {
+                    if (!checkRecordAudioPermisssion()) {
                         requestRecordAudioPermission()
-                    }else {
+                    } else {
                         val recordAudioBottomSheet = RecordAudioBottomSheet()
                         recordAudioBottomSheet.setStyle(
                             STYLE_NORMAL,
@@ -367,9 +358,10 @@ class MainActivity : AppCompatActivity(), ChatAdapter.QuoteClickListener {
                         )
                         recordAudioBottomSheet.show(supportFragmentManager, "record audio sheet")
                     }
-
                 }
+                chatEdt.text.clear()
             }
+
         })
 
 
@@ -504,7 +496,7 @@ class MainActivity : AppCompatActivity(), ChatAdapter.QuoteClickListener {
 
 
 
-                            adapter.notifyDataSetChanged()
+
 
                             chtPrgsBar.visibility = GONE
                             Log.d("count", count.toString())
@@ -677,17 +669,20 @@ class MainActivity : AppCompatActivity(), ChatAdapter.QuoteClickListener {
 //    }
 
     }
-    fun checkRecordAudioPermisssion() : Boolean{
-        if (ContextCompat.checkSelfPermission(this,android.Manifest.permission.RECORD_AUDIO)
-        != PackageManager.PERMISSION_GRANTED){
+
+    fun checkRecordAudioPermisssion(): Boolean {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.RECORD_AUDIO)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
             return false
         }
         return true
     }
 
-    fun requestRecordAudioPermission(){
-        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.RECORD_AUDIO)
-            ,RECORD_AUDIO_PERMISSION_CODE)
+    fun requestRecordAudioPermission() {
+        ActivityCompat.requestPermissions(
+            this, arrayOf(android.Manifest.permission.RECORD_AUDIO), RECORD_AUDIO_PERMISSION_CODE
+        )
     }
 
     fun checkStoragePermission(): Boolean {
@@ -754,10 +749,10 @@ class MainActivity : AppCompatActivity(), ChatAdapter.QuoteClickListener {
 
                 }
             RECORD_AUDIO_PERMISSION_CODE ->
-                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    Toast.makeText(this,"permission granted",Toast.LENGTH_SHORT).show()
-                }else{
-                    Toast.makeText(this,"permission denied",Toast.LENGTH_SHORT).show()
+                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "permission granted", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "permission denied", Toast.LENGTH_SHORT).show()
                 }
         }
 
@@ -839,6 +834,11 @@ class MainActivity : AppCompatActivity(), ChatAdapter.QuoteClickListener {
     override fun onQuoteClick(position: Int) {
         chatRecyclerView.smoothScrollToPosition(position - 1)
 
+    }
+
+    override fun onStop() {
+        super.onStop()
+        adapter.releasePlayer()
     }
 
 

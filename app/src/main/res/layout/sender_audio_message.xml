@@ -21,7 +21,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/audio_play_btn"/>
-
+    <ImageView
+        android:id="@+id/pause_audio_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible"
+        android:src="@drawable/pause_audio"/>
 
 <!--    <rm.com.audiowave.AudioWaveView-->
 <!--        android:id="@+id/audio_wave_bar"-->
@@ -48,7 +55,9 @@
         app:layout_constraintStart_toEndOf="@id/play_audio_msg"
         app:layout_constraintEnd_toStartOf="@id/audio_timeline"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="12dp"/>
+        android:layout_marginTop="12dp"
+        android:minHeight="8dp"
+        android:background="@drawable/visualizer_bg"/>
 
     <TextView
         android:id="@+id/audio_timeline"

@@ -14,6 +14,7 @@ import android.os.CountDownTimer
 import android.os.Handler
 import android.provider.CalendarContract
 import android.provider.MediaStore
+import android.support.v4.media.session.PlaybackStateCompat
 import android.text.TextUtils
 import android.text.format.DateFormat.format
 import android.text.format.DateUtils
@@ -95,20 +96,22 @@ import java.util.concurrent.TimeUnit
 open class ChatAdapter(val context: Context, chatlist: ArrayList<ChatModel>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-     lateinit var timer: CountDownTimer
+    lateinit var timer: CountDownTimer
     val MSG_RIGHT = 0
     val MSG_LEFT = 1
     val MSG_REPLY_RIGHT = 2
     val MSG_REPLY_LEFT = 3
     val IMG_MSG = 4
     val AUDIO_MSG = 5
-    var mediaPlayer : MediaPlayer? = null
-    var player : ExoPlayer? = ExoPlayer.Builder(context).build()
-    var bytes : ByteArray? = null
+    var mediaPlayer: MediaPlayer? = null
+    var player: ExoPlayer? = null
+    var bytes: ByteArray? = null
     var previous = 0
-    var current = 0
-//    lateinit var progressAnim : ObjectAnimator
-var duration : Long = 0
+    var currentPlayingPosition = -1
+    var playingHolder: SenderAudioViewHolder? = null
+
+    //    lateinit var progressAnim : ObjectAnimator
+    var duration: Long = 0
     var chatList: ArrayList<ChatModel> = chatlist
 
     interface QuoteClickListener {
@@ -146,8 +149,11 @@ var duration : Long = 0
                 LayoutInflater.from(parent.context).inflate(R.layout.receiver_chat, parent, false)
             )
         }
-        if (viewType == AUDIO_MSG){
-            return SenderAudioViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.sender_audio_message,parent,false))
+        if (viewType == AUDIO_MSG) {
+            return SenderAudioViewHolder(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.sender_audio_message, parent, false)
+            )
         }
 
         return ReceiverReplyViewHolder(
@@ -159,7 +165,7 @@ var duration : Long = 0
 
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (chatList.get(holder.adapterPosition).type.equals("sender")
+        if (chatList.get(holder.bindingAdapterPosition).type.equals("sender")
             && chatList.get(holder.adapterPosition).quotepos == -1
         ) {
             var cal1 = Calendar.getInstance()
@@ -422,13 +428,14 @@ var duration : Long = 0
         ) {
 
 
-            if (chatList.get(holder.adapterPosition).mediaType.equals("image")){
-                Glide.with(context).load(Uri.parse(chatList.get(holder.adapterPosition).quote)).override(400,150)
+            if (chatList.get(holder.adapterPosition).mediaType.equals("image")) {
+                Glide.with(context).load(Uri.parse(chatList.get(holder.adapterPosition).quote))
+                    .override(400, 150)
                     .into((holder as SenderReplyViewHolder).quotedImgSndr)
                 holder.sndReplyTxt.text = chatList.get(position).message
                 holder.name.text = chatList.get(holder.adapterPosition).type
                 holder.QuotedTxt.visibility = View.GONE
-            }else{
+            } else {
                 (holder as SenderReplyViewHolder).QuotedTxt.visibility = View.VISIBLE
                 (holder as SenderReplyViewHolder).QuotedTxt.text = chatList.get(position).quote
                 (holder as SenderReplyViewHolder).sndReplyTxt.text = chatList.get(position).message
@@ -529,10 +536,9 @@ var duration : Long = 0
                                             val map = HashMap<String, Any>()
                                             map.put("message", "this is message is deleted")
                                             map.put("type", "sender")
-                                            map.put("quotepos",-1)
-                                            map.put("quote","")
+                                            map.put("quotepos", -1)
+                                            map.put("quote", "")
                                             ds.ref.updateChildren(map)
-
 
 
                                         }
@@ -557,9 +563,7 @@ var duration : Long = 0
                 }
 
             })
-        }
-
-        else if (chatList.get(holder.adapterPosition).quotepos != -1 && chatList.get(holder.adapterPosition).type
+        } else if (chatList.get(holder.adapterPosition).quotepos != -1 && chatList.get(holder.adapterPosition).type
                 .equals("receiver")
         ) {
             var previousMsg: Long? = 0
@@ -776,7 +780,8 @@ var duration : Long = 0
                     val builder: AlertDialog.Builder = AlertDialog.Builder(p0!!.context)
                     builder.setMessage("Are you sure you want to delete this Image?")
                         .setPositiveButton("Yes", object : DialogInterface.OnClickListener {
-                            override fun onClick(p0: DialogInterface?, p1: Int) {var msg = chatList.get(holder.adapterPosition).message
+                            override fun onClick(p0: DialogInterface?, p1: Int) {
+                                var msg = chatList.get(holder.adapterPosition).message
                                 var timestamp = chatList.get(holder.adapterPosition).dateFormat
                                 Log.d("timestamp", timestamp.toString())
                                 Log.d("msg1", msg.toString())
@@ -817,94 +822,20 @@ var duration : Long = 0
 
 
         }
-        if (chatList.get(holder.adapterPosition).type.equals("senderAudio")){
-            (holder as SenderAudioViewHolder).audioPlayBtn.setOnClickListener(object : View.OnClickListener{
-                override fun onClick(p0: View?) {
-
-
-
-                        try {
-
-                            if (player != null && player!!.playWhenReady && player!!.playbackState == Player.STATE_READY){
-                                holder.audioPlayBtn.setImageResource(R.drawable.audio_play_btn)
-                                    player!!.stop()
-                                   holder.audioWaveBar.release()
-                                 duration = player!!.currentPosition
-                                holder.audioTimeLine.text = "00:00"
-                                timer.cancel()
-                                Log.d("PlayerStopped","Stopped")
-
-                                previous = holder.absoluteAdapterPosition
-
-
-                            }else {
-                                if (player != null) {
-                                    holder.audioPlayBtn.setImageResource(R.drawable.pause_audio)
-                                    player = ExoPlayer.Builder(context).build()
-                                    val mediaItem =
-                                        MediaItem.fromUri(chatList.get(holder.absoluteAdapterPosition).message!!)
-                                    player!!.setMediaItem(mediaItem)
-                                    player!!.prepare()
-                                    player!!.playWhenReady = true
-                                    Log.d("isPlay", player!!.audioSessionId.toString())
-                                    holder.audioWaveBar.setDensity(60f)
-                                    holder.audioWaveBar.setColor(Color.BLACK)
-                                    holder.audioWaveBar.setPlayer(player!!.audioSessionId)
-                                    Log.d("PlayerPlayed","Played")
-                                    current = holder.absoluteAdapterPosition
-
-                                }
-                            }
-
-                            player!!.addListener(object : Player.Listener{
-                                override fun onPlaybackStateChanged(playbackState: Int) {
-                                    if (playbackState == Player.STATE_READY){
-                                        Log.d("isPlay","Playing")
-                                        timer = object : CountDownTimer(player!!.duration,1000){
-                                            override fun onTick(p0: Long) {
-                                                val time = String.format("%02d:%02d",p0 / 60000,
-                                                    p0 % 60000 / 1000)
-                                                holder.audioTimeLine.text = time
-                                            }
-
-                                            override fun onFinish() {
-                                                holder.audioTimeLine.text = "00:00"
-                                            }
-
-                                        }.start()
-
-                                    }
-
-                                    if (playbackState == Player.STATE_ENDED){
-                                        holder.audioPlayBtn.setImageResource(R.drawable.audio_play_btn)
-                                        player!!.release()
-                                        holder.audioWaveBar.release()
-                                    }
-                                }
-
-
-
-                            })
-
-//if (previous != current){
-//    player!!.pause()
-//}
-
-                        } catch (e: Exception) {
-                            Log.d("exoPlayerErr", e.toString())
-                        }
-
-
-
-
-
+        if (chatList.get(holder.adapterPosition).type.equals("senderAudio")) {
+            playingHolder = holder as SenderAudioViewHolder
+            if (holder.absoluteAdapterPosition == currentPlayingPosition) {
+                if (player!!.playWhenReady && player!!.playbackState == Player.STATE_READY) {
+                    playingHolder!!.audioPlayBtn.setImageResource(R.drawable.pause_audio)
+                } else {
+                    playingHolder!!.audioPlayBtn.setImageResource(R.drawable.audio_play_btn)
                 }
-            })
-
+            } else {
+                playingHolder!!.audioPlayBtn.setImageResource(R.drawable.audio_play_btn)
+            }
 
 
         }
-
 
 
     }
@@ -912,6 +843,7 @@ var duration : Long = 0
     override fun getItemCount(): Int {
         return chatList.size
     }
+
 
     override fun getItemViewType(position: Int): Int {
         if (chatList.get(position).type.equals("sender") && chatList.get(position).quotepos == -1) {
@@ -926,13 +858,21 @@ var duration : Long = 0
         } else if (chatList.get(position).type.equals("receiver") && chatList.get(position).quotepos != -1) {
             return MSG_REPLY_LEFT
         }
-        if (chatList.get(position).type.equals("senderAudio")){
+        if (chatList.get(position).type.equals("senderAudio")) {
             return AUDIO_MSG
-        }
-        else {
+        } else {
             return IMG_MSG
         }
 
+    }
+
+
+    fun releasePlayer() {
+        if (player != null) {
+            player!!.release()
+            player = null
+            currentPlayingPosition = -1
+        }
     }
 
     inner class SenderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -957,8 +897,8 @@ var duration : Long = 0
         val reply: ConstraintLayout = itemView.findViewById(R.id.reply)
         val date2: TextView = itemView.findViewById(R.id.date2)
         val senderReplyMsgTime: TextView = itemView.findViewById(R.id.sender_reply_msg_time)
-        val quotedImgSndr : ImageView = itemView.findViewById(R.id.quoted_img)
-        val name : TextView = itemView.findViewById(R.id.name)
+        val quotedImgSndr: ImageView = itemView.findViewById(R.id.quoted_img)
+        val name: TextView = itemView.findViewById(R.id.name)
     }
 
     inner class ReceiverReplyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -966,7 +906,7 @@ var duration : Long = 0
         val QuotedTxt: TextView = itemView.findViewById(R.id.textQuote1)
         val reply1: ConstraintLayout = itemView.findViewById(R.id.reply1)
         val date3: TextView = itemView.findViewById(R.id.date3)
-        val quotedImgRecvr : ImageView = itemView.findViewById(R.id.quoted_img_receiver)
+        val quotedImgRecvr: ImageView = itemView.findViewById(R.id.quoted_img_receiver)
     }
 
     inner class SenderImgViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -976,10 +916,146 @@ var duration : Long = 0
     }
 
 
-  inner  class SenderAudioViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-       val audioPlayBtn : ImageView = itemView.findViewById(R.id.play_audio_msg)
-       val audioWaveBar : LineBarVisualizer = itemView.findViewById(R.id.audio_wave_bar)
-      val audioTimeLine : TextView = itemView.findViewById(R.id.audio_timeline)
+    inner class SenderAudioViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
+        val audioPlayBtn: ImageView = itemView.findViewById(R.id.play_audio_msg)
+        val audioWaveBar: LineBarVisualizer = itemView.findViewById(R.id.audio_wave_bar)
+        val audioTimeLine: TextView = itemView.findViewById(R.id.audio_timeline)
+
+        init {
+
+            audioPlayBtn.setOnClickListener(this)
+        }
+
+        override fun onClick(p0: View?) {
+            try {
+                if (absoluteAdapterPosition == currentPlayingPosition) {
+
+                    if (player!!.playWhenReady && player!!.playbackState == Player.STATE_READY) {
+                        playingHolder!!.audioPlayBtn.setImageResource(R.drawable.audio_play_btn)
+                        player!!.pause()
+                        timer.cancel()
+                        playingHolder!!.audioTimeLine.text = "00:00"
+                        playingHolder!!.audioWaveBar.release()
+
+                        Log.d("Duration4", player!!.duration.toString())
+
+
+                    } else {
+                        player = ExoPlayer.Builder(context).build()
+                        val audioUrl = Uri.parse(chatList.get(currentPlayingPosition).message)
+                        val mediaItem = MediaItem.fromUri(audioUrl)
+                        player!!.setMediaItem(mediaItem)
+                        player!!.prepare()
+                        player!!.playWhenReady = true
+                        playingHolder!!.audioPlayBtn.setImageResource(R.drawable.pause_audio)
+                        Log.d("Duration3", player!!.currentPosition.toString())
+                        player!!.addListener(object : Player.Listener {
+                            override fun onPlaybackStateChanged(playbackState: Int) {
+                                if (playbackState == PlaybackStateCompat.STATE_PLAYING) {
+                                    val duration = player!!.duration
+                                    timer = object : CountDownTimer(duration, 1000) {
+                                        override fun onTick(p0: Long) {
+                                            val time = String.format(
+                                                "%02d:%02d",
+                                                p0 / 60000,
+                                                p0 % 60000 / 1000
+                                            )
+                                            playingHolder!!.audioTimeLine.text = time
+                                        }
+
+                                        override fun onFinish() {
+
+                                        }
+
+                                    }.start()
+                                }
+                                if (playbackState == Player.STATE_ENDED) {
+                                    if (playingHolder != null) {
+                                        playingHolder!!.audioPlayBtn.setImageResource(R.drawable.audio_play_btn)
+                                    }
+                                    releasePlayer()
+                                }
+                            }
+
+                        })
+
+                        playingHolder!!.audioWaveBar.setDensity(90f)
+                        playingHolder!!.audioWaveBar.setColor(Color.GRAY)
+                        playingHolder!!.audioWaveBar.setPlayer(player!!.audioSessionId)
+
+
+                    }
+                } else {
+                    currentPlayingPosition = absoluteAdapterPosition
+                    if (player != null) {
+                        if (playingHolder != null) {
+                            playingHolder!!.audioPlayBtn.setImageResource(R.drawable.audio_play_btn)
+
+
+                        }
+                        timer.cancel()
+                        playingHolder!!.audioTimeLine.text = "00:00"
+                        playingHolder!!.audioWaveBar.release()
+                        player!!.release()
+
+
+                    }
+                    playingHolder = this
+                    player = ExoPlayer.Builder(context).build()
+                    val audioUrl = Uri.parse(chatList.get(currentPlayingPosition).message)
+                    val mediaItem = MediaItem.fromUri(audioUrl)
+                    player!!.setMediaItem(mediaItem)
+                    player!!.prepare()
+                    player!!.playWhenReady = true
+                    Log.d("Duration1", player!!.duration.toString())
+                    if (player != null) {
+                        playingHolder!!.audioPlayBtn.setImageResource(R.drawable.pause_audio)
+                    }
+                    player!!.addListener(object : Player.Listener {
+                        override fun onPlaybackStateChanged(playbackState: Int) {
+                            if (playbackState == PlaybackStateCompat.STATE_PLAYING) {
+                                timer = object : CountDownTimer(player!!.duration, 1000) {
+                                    override fun onTick(p0: Long) {
+                                        val time = String.format(
+                                            "%02d:%02d",
+                                            p0 / 60000,
+                                            p0 % 60000 / 1000
+                                        )
+                                        playingHolder!!.audioTimeLine.text = time
+                                    }
+
+                                    override fun onFinish() {
+
+                                    }
+
+                                }.start()
+                            }
+                            if (playbackState == Player.STATE_ENDED) {
+                                if (playingHolder != null) {
+                                    playingHolder!!.audioPlayBtn.setImageResource(R.drawable.audio_play_btn)
+                                }
+                                releasePlayer()
+                            }
+                        }
+
+                    })
+
+                    playingHolder!!.audioWaveBar.setDensity(50f)
+                    playingHolder!!.audioWaveBar.setColor(Color.GRAY)
+                    playingHolder!!.audioWaveBar.setPlayer(player!!.audioSessionId)
+                }
+
+
+//if (previous != current){
+//    player!!.pause()
+//}
+
+            } catch (e: Exception) {
+                Log.d("exoPlayerErr", e.toString())
+            }
+        }
+
 
     }
 }
